@@ -4,35 +4,48 @@ import ReactMarkdown from "react-markdown";
 import { BookOpenText } from "lucide-react";
 import { glossaryData } from "@/data/glossaryData";
 import { GlossaryTooltip } from "./GlossaryTooltip";
-import React from "react";
-
-// Helper to wrap glossary terms in Tooltips
-function renderTextWithTooltips(text: string) {
-    // Sort terms by length descending so longer phrases match first
-    const sortedTerms = [...glossaryData].sort((a, b) => b.term.length - a.term.length);
-
-    // Create a regex to match any of the terms (case-insensitive, whole word)
-    const escapedTerms = sortedTerms.map(t => t.term.replace(/[.*+?^${}()|[\]\\]/g, '\\$&'));
-    const regex = new RegExp(`\\b(${escapedTerms.join('|')})\\b`, 'gi');
-
-    const parts = text.split(regex);
-
-    return parts.map((part, i) => {
-        const lowerPart = part.toLowerCase();
-        const foundTerm = sortedTerms.find(t => t.term.toLowerCase() === lowerPart);
-
-        if (foundTerm) {
-            return (
-                <GlossaryTooltip key={i} term={foundTerm.term} definition={foundTerm.definition}>
-                    {part}
-                </GlossaryTooltip>
-            );
-        }
-        return <React.Fragment key={i}>{part}</React.Fragment>;
-    });
-}
+import React, { useMemo } from "react";
 
 export function DeepDiveSection({ content }: { content: string }) {
+    // We recreate this set every time DeepDiveSection renders a new step
+    const seenTerms = new Set<string>();
+
+    const sortedTerms = useMemo(() => {
+        return [...glossaryData].sort((a, b) => b.term.length - a.term.length);
+    }, []);
+
+    const regex = useMemo(() => {
+        const escapedTerms = sortedTerms.map(t => t.term.replace(/[.*+?^${}()|[\]\\]/g, '\\$&'));
+        // Matches the term followed optionally by hungarian suffix characters like '-ot', 'ekkel'
+        // Wrap everything in a capture group so it stays in the split array
+        return new RegExp(`\\b((?:${escapedTerms.join('|')})(?:[-a-záéíóüőúűö]*))\\b`, 'gi');
+    }, [sortedTerms]);
+
+    function renderTextWithTooltips(text: string) {
+        const parts = text.split(regex);
+
+        return parts.map((part, i) => {
+            if (i % 2 === 1) { // Capturing group logic in JS split
+                const lowerPart = part.toLowerCase();
+                const foundTerm = sortedTerms.find(t => lowerPart.startsWith(t.term.toLowerCase()));
+
+                if (foundTerm) {
+                    if (seenTerms.has(foundTerm.term)) {
+                        return <React.Fragment key={i}>{part}</React.Fragment>;
+                    } else {
+                        seenTerms.add(foundTerm.term);
+                        return (
+                            <GlossaryTooltip key={i} term={foundTerm.term} definition={foundTerm.definition}>
+                                {part}
+                            </GlossaryTooltip>
+                        );
+                    }
+                }
+            }
+            return <React.Fragment key={i}>{part}</React.Fragment>;
+        });
+    }
+
     return (
         <section className="bg-card rounded-2xl p-6 md:p-8 border border-border shadow-sm">
             <div className="flex items-center gap-3 mb-6 pb-4 border-b border-border/50">
