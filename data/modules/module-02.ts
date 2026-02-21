@@ -66,13 +66,109 @@ A **Multi-Agent Systems (Többszereplős Ügynöki Rendszerek, pl. CrewAI vagy A
 3. **Az Író (Writer Agent):** Megkapja a Kutató nyers adatait, és valaki más tollából egy tökéletes blogposztot varázsol belőle.
 4. **Az Ellenőr (Quality Control Agent):** Végül egy kifejezetten "kritikusra" hangolt Ágens átnézi az író munkáját, és visszadobja javításra, ha nem felel meg az irányelveknek.`
         },
-        { id: "2-4", text: "Agent memória és állapotkezelés", subcategory: "Alapfogalmak" },
-        { id: "2-5", text: "Eszköz használat és API integráció", subcategory: "Alapfogalmak" },
-        { id: "2-6", text: "ReAct minta: Rövid gondolkodás + azonnali cselekvés", subcategory: "Workflow Minták" },
-        { id: "2-7", text: "Plan-and-Execute: Stratégiai tervezés elkülönítése a végrehajtástól", subcategory: "Workflow Minták" },
-        { id: "2-8", text: "Reflection Loop: Önkritika és kimenet finomítása", subcategory: "Workflow Minták" },
-        { id: "2-9", text: "Tree of Thoughts és Multi-Agent Router-Specialist", subcategory: "Workflow Minták" },
-        { id: "2-10", text: "LangGraph, CrewAI, AutoGPT megismerése", subcategory: "Orchestration" }
+        {
+            id: "2-4",
+            text: "Agent memória és állapotkezelés",
+            subcategory: "Alapfogalmak",
+            content: `## Hogy Ne Felejtse El a Nevünket
+
+Egy normális API lekérdezés teljesen "Amnéziás" (Stateless): Ha beküldesz 10 kérdést egymás után, az AI nem tudja a 10. kérésnél, mi volt az első 9.
+
+### Memória típusok egy Úgynöknél:
+1. **Rövidtávú memória (Short-term):** Ez a te "Chat ablakod". Az ügynök mindig magához csatolja és beküldi a beszélgetés eddigi 10 üzenetét a legújabb Promptod mellé. Gyors, de hamar betelik a token-limit!
+2. **Hosszútávú memória (Long-term):** Külső Vector Adatbázishoz ment le információkat (olyan mint egy merevlemez), majd "RAG" segítségével keres onnan elő 1 éves találkozó logokat is másodpercek alatt.
+3. **Állapot memóra (Entity State):** Kifejezetten a tényeket rögzíti adatként. Például a memóriájába beégeti formázott szövegként: "Felhasználó Neve = Imre", "Hobbija: AI Építés".`
+        },
+        {
+            id: "2-5",
+            text: "Eszköz használat és API integráció",
+            subcategory: "Alapfogalmak",
+            content: `## A Kezek: Hogyan adunk "szerszámot" az AI kezébe?
+
+Amíg az AI csak szöveget mond, az olyan, mintha be lenne zárva egy okos ember egy sötét szobába. Ahhoz, hogy tettekre váltsa az elméletet (Agentic), eszközökre van szüksége (Azt is nevezzük **Tool Calling**-nak).
+
+Amikor egy Ügynököt építesz (pl. Pythonban vagy NoCode felületen), definiálsz neki funkciókat:
+*   *Eszköz 1:* \`search_google(query)\` -> Kimenete: 3 weboldal címe.
+*   *Eszköz 2:* \`send_email(to, text)\` -> Kimenete: "Email Sikeresen elküldve".
+
+Amikor a felhasználó azt mondja: *"Keresd meg holnap milyen idő lesz Siófokon, és írd meg feleségemnek emailben"*, az AI a háttérben nem halandzsázik egy időjárást. Hanem **Tudatosan meghívja az Eszköz 1-et Siófokra fókuszálva, feldolgozza az eredményt, majd leírja a levél vázlatot, és meghívja az Eszköz 2-t, kitöltve a címzetten.** Kész a varázslat!`
+        },
+        {
+            id: "2-6",
+            text: "ReAct minta: Rövid gondolkodás + azonnali cselekvés",
+            subcategory: "Workflow Minták",
+            content: `## A ReAct (Okok és Oknyomozás) Architektúra
+
+Az elnevezés a **Reasoning and Acting** (Gondolkodás és Cselekvés) angol szavakból származik. Ezt a keretrendszert a Google kutatói fedezték fel 2022-ben.
+
+Hogy működik? Belekényszerítjük a modellt egy végtelen ciklusba (while loop), ami addig ismétlődik, amíg meg nem találja a tökéletes választ.
+
+Lépései a motorháztető alatt:
+1. **Thought (Gondolat):** *"Azt kérték mondjam meg ki játssza főszereplőt a Gladiátor 2-ben. Ezt nem tudom fejből."*
+2. **Action (Cselekvés):** \`(Eszköz hívás: Google Keresés: "Gladiátor 2 főszereplő")\`
+3. **Observation (Megfigyelés):** *"A Google visszaadta, hogy Paul Mescal játssza a főszerepet. Most már tudom a választ."*
+4. **Végső Válasz:** *"A főszereplőt Paul Mescal játssza."*`
+        },
+        {
+            id: "2-7",
+            text: "Plan-and-Execute: Stratégiai tervezés elkülönítése a végrehajtástól",
+            subcategory: "Workflow Minták",
+            content: `## A Tervezz-Majd-Futtass Architektúra
+
+A ReAct modell nagyon jó apró keresésekben, de ha egy hatalmas kérést kap (pl. *"Írj nekem egy elemzést a Tesla utolsó 3 éves részvény mozgásáról, majd vizuális chartokat is generálj hozzá és mentsd el PDF-be"*), akkor valószínűleg elakad menet közben.
+
+Erre való a **Plan-And-Execute** modell.
+
+Itt fizikailag két KÜLÖNÁLLÓ AI dolgozik:
+1. **A Tervező (Planner):** Egy nagyon okos (drága) modell, aki semmilyen Eszközhöz nem fér hozzá. Ő leül, és ír egy kőkemény 5 pontos, sorszámozott Feladatlistát.
+2. **A Végrehajtó (Executor):** Egy kisebb, olcsóbb, gépiesebb modell. Megkapja a Tervezőtől a Lista #1. feladatát, és vakon végrehajtja a legmegfelelőbb eszközzel, majd várja a #2. feladatot.
+
+Ez az osztás rengeteg pénzt spórol (nem kell a drága modellt 10x lefuttatni a cselekvéshez) és megakadályozza, hogy az AI "belezavarodjon" a soklépéses műveletekbe.`
+        },
+        {
+            id: "2-8",
+            text: "Reflection Loop: Önkritika és kimenet finomítása",
+            subcategory: "Workflow Minták",
+            content: `## Reflection (Tükörkép / Kritika)
+
+A legegyszerűbb, de legbrutálisabb trükk az AI minőségének azonnali javítására (Akár a sima napi ChatGPT használatod során is!!!).
+
+A "Reflection" workflow annyit tesz, hogy ahelyett, hogy azonnal odaadnánk a generált választ a felhasználónak, az elkészült művet **odaadjuk egy másik, dedikált "Kritikus AI-nak"** a háttérben.
+
+Példa:
+- *Programozó Bot:* Megszerkeszti a Weboldal kódját.
+- *Kritikus Bot (Belső):* "Átnéztem, szintaktikai hiba van a 15. sorban, és hiányzik a mobil-nézet."
+- *Programozó Bot (Javít):* Elnézést, íme a javított kód.
+
+Ez a két Bot addig "verekszik" egymással a háttérben, amíg a Kritikus Bot nem mondja azt hogy: *"Ez 10/10 jó."*. A Felhasználó csak a tökéletes, végső eredményt látja!`
+        },
+        {
+            id: "2-9",
+            text: "Tree of Thoughts és Multi-Agent Router-Specialist",
+            subcategory: "Workflow Minták",
+            content: `## A Gondolati Fa (Tree of Thoughts - ToT)
+
+Mi a különbség a láncolatos gondolkodás (Chain of Thought - CoT) és a ToT között?
+Míg a CoT "egyvonalú" vonaton utazik (Ha rossz felé indult el a logika az elején, menthetetlenül rossz lesz a vége), a **Tree of Thoughts** "elágazásokban" keresi a jövőt, mintha Sakk lépéseket tervezne előre.
+
+### Router (Irányító) Pattern
+Többügynökös rendszereknél az egyik legmegbízhatóbb módszer, ha a Frontend (ahol a Felhasználó beszélget) mögött csak egy "Portás / Irányító" Ágens ül.
+A Portás analizálja a kérdést:
+- *"Hogyan fizessek be adót?"* -> A Portás átdobja a kérdést a "Pénzügyi Specialista Ágensnek", elkerülve, hogy a "Tech Support Ágens" válaszoljon rá hülyeséget. Ezt az útválasztást hívják Router architektúrának.`
+        },
+        {
+            id: "2-10",
+            text: "LangGraph, CrewAI, AutoGPT megismerése",
+            subcategory: "Orchestration",
+            content: `## Keretrendszerek Csatája
+
+Ha már tudod hogyan működnek a workflow-k, szükséged lesz egy keretrendszerre amibe felépíted őket. Senki nem ír "from scratch" ilyen komplex loopokat ma már!
+
+### A Top Játékosok:
+1. **LangGraph (A Profik Választása):** Képzelj el egy folyamatábrát (Node-okból és Vonalakból). Itt te mint a villanyszerelő húzod be a logikát: A Bot átadja B Botnak 100%-os megbízhatósággal. A leginkább "Production Ready" megoldás.
+2. **CrewAI (Az Életre Kelt Szakemberek):** Egyszerű és szöveg-alapú. Létrehozhatsz "Munkások" (Agents) és "Feladatok" (Tasks) listáját. Odaadod a főnöknek a listát, és ők elkezdenek egymással trécselni a háttérben, hogy megoldják.
+3. **AutoGPT / BabyAGI:** Ők a "Nagypapák". Ők indították el az autonóm AI forradalmát 2023-ban. Adj meg egy céget (pl. "Építs nekem egy játékot") és ő órákon keresztül próbál programozni meg a weben kutatni megállás nélkül.`
+        }
     ],
 
     whenToChoose: [

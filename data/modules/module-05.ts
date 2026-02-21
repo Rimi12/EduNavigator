@@ -62,10 +62,65 @@ Hogyan mérjük helyesen?
 - **Recall (Érzékenység/Visszahívás):** Kívülről is látja a "célt"? *"Az összes (1 db) beteg közül hány százalékát találta meg az AI?"* Esetünkben 0%-ot. Itt bukik el az AI orvos.
 - **F1 Score:** Egy kiegyensúlyozott, arany középút a Precision és a Recall között, ami egyetlen százalékban mondja meg, merre tartasz.`
         },
-        { id: "5-4", text: "Token usage és költség elemzés", subcategory: "Metrikák" },
-        { id: "5-5", text: "RAG retrieval accuracy: Hit rate, MRR", subcategory: "Metrikák" },
-        { id: "5-6", text: "LLM output minőségmérés: BLEU, ROUGE", subcategory: "Metrikák" },
-        { id: "5-7", text: "Pandas, NumPy és Matplotlib használat", subcategory: "Eszközök" }
+        {
+            id: "5-4",
+            text: "Token usage és költség elemzés",
+            subcategory: "Metrikák",
+            content: `## A Benzinkút a Felhőben
+
+Az AI világában a fizetőeszköz a **Token**. (1 Token nagyjából 1 szótag, ~4 angol betű).
+A nagy szolgáltatók (OpenAI, Anthropic) két dologért számláznak, amikor API-val lekérdezel tőlük valamit:
+1. **Input Tokens:** Amit te küldesz (Prompt és feltöltött szöveg). Általában ez nagyon olcsó!
+2. **Output Tokens:** Azt a választ, amit a gép generál neked. Ez drága! (Van amikor a 4-szerese a bemeneti (Input) Token árának).
+
+### Ha Nem Számolsz, Csődbe Mész
+Egy rosszul programozott "Agent" (Autonóm Végrehajtó), ami befagy egy végtelen kutatási hurokba az adathalmazban (ReAct minta megszakítása nélkül), percek alatt képes lenyelni akár 40 ezer forintot is a bankkártyádról, csak azzal hogy 100-szor egymás után átdarálja az óriási 60 oldalas PDF fájlodat!`
+        },
+        {
+            id: "5-5",
+            text: "RAG retrieval accuracy: Hit rate, MRR",
+            subcategory: "Metrikák",
+            content: `## Rájött a Gépünk a Zónára? (Hit Rate & MRR)
+
+A RAG (Saját Dokumentumon Kereső AI) csak akkor okos, ha maga a Vector Adatbázis kereső motorja (A Dokumentum "Előhúzó") az LLM Előtt megtalálja a megfelelő szerződést. De ezt is mérni kell matematikai metrikákkal!
+
+### Hit Rate (Találati Arány)
+A legegyszerűbb mutató. Azt nézi, hogy a megadott Top-K-ban (Pl. 5 visszadobott keresési eredményben) egyáltalán **benne volt-e legalább EGY releváns, helyes dokumentum-töredék**. Ha igen (Hit), akkor 1 pont, ha csupa szemetet talált a cégadatbázisban, 0 pont. Kiszámoljuk ezt 1000 lekérésre és százalékot kapsz a hatékonyságodról.
+
+### MRR (Mean Reciprocal Rank)
+De nem mindegy mikor jött a találat! Képzeld el hogy kiküldtél 10 keresést, és a releváns tudás mindig az utolsó, 10. (Bottom) helyen volt. A Hit Rate 100% lenne, holott a keresőd lassú és torz.
+
+Az MRR egy tört (1/K pozíció).
+- Ha azonnal az 1. helyen megtalálja a gép a pontos kontextust: 1/1 = Vaskos 1 Pont.
+- Ha csak a 5. helyen jön a válasz: 1/5 = Azaz te csak 0.2 Pont Jutalmat kapsz. Ha az átlagos MRR-ed magas, tudod, hogy a RAG-od zseniálisan tűpontos!`
+        },
+        {
+            id: "5-6",
+            text: "LLM output minőségmérés: BLEU, ROUGE",
+            subcategory: "Metrikák",
+            content: `##  Működik a Fordító-Motorunk? (A Hagyományos NLP)
+
+Még mielőtt a GPT és társai megjelentek, az AI egyik fő képessége a "Fordítás" és "Összegzés" volt nyelvek között (NLP korszak). Hogy állapítod meg egy gépről matematikai módiszámmal, hogy "Pontos-e a Francia fordítása?"
+
+Két híres statisztikai mutatószám vonult be a történelembe erre:
+1. **BLEU (Bilingual Evaluation Understudy):** Fordításnál zseniális. Adunk 3 Professzionális emberi fordítást (Golden Standard), és fogjuk az AI gépi fordítását. Megnézzük, hogy az AI által kitermelt N-grammok (2-3 szavas kifejezések) hány %-ban egyeznek meg az emberi leiratokkal. Precizitásra fókuszál.
+2. **ROUGE (Recall-Oriented Understudy for Gisting):** Kifejezetten "Szövegösszegzésekhez" találták ki, nem fordításhoz. Ott nem baj ha van benne a kimenő összegzésben a FŐ TÉMA (Recall), még ha más szavakkal is fogalmaz. Ha egyezik a gondolat, a ROUGE metrika zöldet jelez.`
+        },
+        {
+            id: "5-7",
+            text: "Pandas, NumPy és Matplotlib használat",
+            subcategory: "Eszközök",
+            content: `## A Szent Háromság (A Python Kincsei)
+
+Amikor meg kell számolnod heti 1.2 millió eladási tranzakciót és statisztikát kell vonsz abból, az Excel (ahol görgetni is akadás) azonnal befagy. A kódolók ilyenkor a Pythonhoz, és a három legnépszerűbb "Eszköztárhoz" nyúlnak:
+
+### 1. Pandas
+Ez az "Excel megkódolva". Képes hatalmas táblázatokat (úgynevezett DataFrame-eket) betölteni a memóriába, és másodpercek alatt szűrhetsz: *"Add meg az összes 30 év alatti nőt a listából, úgy elrendezve ahol a fizetés növekvő sorrendben van!"* Pár sor kód.
+### 2. NumPy 
+A legfejlettebb és villámrögton (C++ ra írt) numerikus számológép, ami mátrixokkal és tömbökkel dolgozik. Amikor az AI a vektor-adatbázisokkal vagy képpixel "Hőmérsékletekkel" operál, NumPy alatt pazarol minimális áramot a gép a Cosinus méréseknél.
+### 3. Matplotlib
+Ha látni akarod a trendet az unalmas számok helyett! A Matplotlib percek alatt elragadó Vonal diagramsokat, Oszlop diagramokat és Szórás Pont diagramokat generál ki neked grafikus fájlkent (kimentheted PNG-be is), ami után beillesztheted a menedzsered prezentációjába!`
+        }
     ],
 
     whenToChoose: [

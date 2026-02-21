@@ -83,12 +83,106 @@ Ha bedobsz egy 500 oldalas könyvet az adatbázisba egyetlen egy "vektorként", 
 2. **Recursive character chunking:** Megpróbálja fentről lefelé tiszteletben tartani a formázást: előbb vág új bekezdés jellel (\`\\n\\n\`), aztán mondattal, de sosem vág ketté egy szót.
 3. **Semantic chunking:** (A Jövő) Maga a modell nézi meg, hogy hol ér véget a logikai mondanivaló a dokumentumban, és ott szeli el, legyen az 2 sor vagy 2 bekezdés.`
         },
-        { id: "3-5", text: "Szemantikus keresés és hasonlósági metrikák (cosine similarity)", subcategory: "Alapfogalmak" },
-        { id: "3-6", text: "Document loaders és Text splitting módszerek", subcategory: "Technikai implementáció" },
-        { id: "3-7", text: "Vector stores (Pinecone, Chroma, Qdrant, FAISS)", subcategory: "Technikai implementáció" },
-        { id: "3-8", text: "Retriever optimalizálás (top-k, threshold beállítás)", subcategory: "Technikai implementáció" },
-        { id: "3-9", text: "Hybrid keresés (keyword + semantic)", subcategory: "Advanced technikák" },
-        { id: "3-10", text: "Re-ranking, relevancia javítás és Multi-modal RAG", subcategory: "Advanced technikák" }
+        {
+            id: "3-5",
+            text: "Szemantikus keresés és hasonlósági metrikák (cosine similarity)",
+            subcategory: "Alapfogalmak",
+            content: `## Több mint Kulcsszókereső! (Semantic Search)
+
+A hagyományos (Google típusú) keresés "Kulcsszó" (Keyword) alapú. Ha te beírod a céges keresőbe, hogy *"Fizu"* miközben a dokumentumokban mindenhol az szerepel, hogy *"Munkabér"*, a gép egy nagy Nullát fog kidobni. Csalódott leszel.
+
+Ezzel szemben áll a **Szemantikus (Jelentésalapú) Keresés**.
+Ha emlékszel a Vektorok térbeli elhelyezkedésére, az AI számára a *"Fizu"* és a *"Munkabér"* vektor (számsor) a virtuális térben rendkívül közel esik egymáshoz. 
+
+Amikor felteszed a kérdést az AI-nak, a kérdésedből is csinál egy Vekort ("Golyót"), amit "bekúszat" a térbe!
+
+### Cosine Similarity (Koszinusz Rendszer)
+A Vector Adatbázis egyszerűen megméri a bezárt Szöget a Kérdésed golyója, és a feltöltött Dokumentumok golyói között. 
+1. Ha a szög majdnem nulla (párhuzamos) -> Akkor a két szöveg jelentése megegyezik (pl. kérted a '*Fizut*', a gép megtalálta a '*Munkabér*'-t). Ezt nevezik *Cosine Similarity*-nek! 
+2. Az adatbázis azonnal visszadobja az ehhez a ponthoz tartozó PDF darabot a gépnek megválaszolásra.`
+        },
+        {
+            id: "3-6",
+            text: "Document loaders és Text splitting módszerek",
+            subcategory: "Technikai implementáció",
+            content: `## A Dokumentumok Bekötése az Érrendszerbe
+
+Amikor egy AI keretrendszerrel dolgozol (Például **LangChain** a kódolók számára), a legelső feladat a nyers adatok begyűjtése, úgynevezett betöltői és darabolói lépésekkel.
+
+### 1. A Retriverek ("Hozók")
+Vannak beépített könyvtárak (Loaders), amelyek 2 sor kóddal képesek szinte bármilyen modern formátumot leforgatni és kinyerni az információt, megszabadítva minket a vizuális formázó elemektől:
+- PDF és Word Loaderek
+- CSV és Excel Loaderek
+- Notion, Confluence, Trello API Loaderek
+- Webpage Loaderek (Kikaparják egy URL cím mögött álló blog cikket hirdetések nélkül).
+
+### 2. A Darabolás (Splitting)
+Mint korábban említettem, a nyers szöveget feldaraboljuk (Chunking). Ilyenkor elengedhetetlen egy kis **"Overlap" (Átfedés)** beállítása!
+Ha a gép mondatonként darabol (50 szó block / chunk), és mi beállítunk 10 szó 'Atfedést', az azt jelenti hogy a 2. dokumentumtömb utolsó mondata szerepelni fog a 3. tömb legelső mondataként is. Miért jó ez? Szálkásító ragasztóként viselkedik, hogy sose szakadjon szét mondat közepén egy kontextus.`
+        },
+        {
+            id: "3-7",
+            text: "Vector stores (Pinecone, Chroma, Qdrant, FAISS)",
+            subcategory: "Technikai implementáció",
+            content: `## Ahol az "AI Memóriája" Érlelődik
+
+Beszéltünk a vektoros (számsoros) adatokról, de vajon hová mentjük el azt a 10 millió koordinátát ami egy könyv beolvasása után lepörög? Bonyolult SQL relációs adatbázisok erre képtelenek 10 másodperc alatt.
+
+### Enter THE VECTOR STORES (Vektor Adatbázisok)
+A Vektor adatbázisokat az alapoktól arra tervezték, hogy ne "keressenek" pontos szavakat egy oszlopban, hanem sokdimenziós terekben (matematikai műveletekkel) számoljanak Cosine Similarity (távolság) méréseket villámgyorsan.
+Néhány sztár a piacon:
+- **Chroma DB:** Talán a legismertebb (nyílt forrású) adatbázis, amit te magad letölthetsz a szerveredre teljesen ingyen. Különösen népszerű lokális, biztonságos vállalati AI építéshez.
+- **Pinecone:** Egy szolgáltatás (Cloud) amit a világ legnagyobb AI cégei használnak. Te csak fellősz nekik egy fájlt API-n, és mindent ők intéznek skálázhatóan, másodpercek alatt.
+- **FAISS:** A Meta (Facebook) által kódolt "könyvtár", ami elképesztő sebességgel rendszerezi és keresi vissza a hatalmas struktúrákat offline gépeken.`
+        },
+        {
+            id: "3-8",
+            text: "Retriever optimalizálás (top-k, threshold beállítás)",
+            subcategory: "Technikai implementáció",
+            content: `## Behúzzuk a Halót! (Retriever Beállítások)
+
+Miután beágyaztad (Embedding) az okirataidat, és a felhasználó feltette a kérdést, elindul a Retreiver (Kereső/Előhívó) folyamat. Hogy ne tölts le szemetet vagy terheld feleslegesen az LLM-et, 2 gombot finomhangolnod kell.
+
+### 1. A TOP-K (Limit)
+Amikor a Vektor Mátrixból visszatérnek a "találatok" (Document Chunk-ok), alapba be van állítva egy Top-K érték (pl \`Top-k = 4\`). A gép hiába talált 100 dokumentumot amiben szerepel a szó, szigorúan csak azt a 4 Darabot, ami a LEGSZOROSABBAN KÖTŐDIK (Cosine) átadja a ChatGPT agyónak, a többit eldobja. Minél nagyobb a K, annál drágább és lassabb a generálásod.
+
+### 2. A Treshold (Küszöb / Dinamikus)
+A Top-k-nél sokszor okosabb. \`Treshold = 0.82\`. Azt mondod a Mátrixnak, hogy hozz vissza BÁRMENNYI dokumentumot, ha annak a hasonlósági ráta értéke (az egyezése) 82% vagy a fölött van. Ha 20 ilyen doksi van, akkor beküldi a 20-at. Ha csak 1, akkor csak egyet biztosít az LLM kontextusába.`
+        },
+        {
+            id: "3-9",
+            text: "Hybrid keresés (keyword + semantic)",
+            subcategory: "Advanced technikák",
+            content: `## Hibrid Keresés (A Legjobb Mindkét Világból)
+
+Bár áradoztunk a Szemantikus Keresés zsenialitásáról, vannak esetek amikor véreset elbukik!
+Képzeld el, hogy alkatrészt keresel a gyártósori AI adatházban. Te a **"TX-4029-B2 Váltókar"**-t keresed.
+A tisztán szemantikus AI kereső elkezd gondolkodni a "Váltó" és a "Kar" szavak jelentéséről és a Vektor Mátrixból visszadobja neked a cég legnépszerűbb "XYSebesség Váltóját" merthogy jelentésben hasonló... Holott te PONTOSAN azt a sorozatszámot akartad látni!
+
+### A Keyword (Kulcsszó) Megment 
+Erre alkották meg a Hibrid (Hybrid) Keresőket az AI-ban. 
+
+Ezek beépítik a hagyományos BM25 algoritmusokat (amiken a Google és az ElasticSearch nőtt fel).
+Amikor elindítod a lekérdezést, a Háttérben 2 kereső indul egyszerre párhuzamosan:
+1. Az Vektor DB elszalad értelmezni a teljes kontextust (Miről szól a sztori).
+2. A Kulcsszó BM25 gép átnyálazza a szövegeket betűre, vonalra, számra fókuszálva.
+Majd a kettő "Eredménylistáját" (Score-okat) összevonja egy matematika képlettel (Alpha mix) és ezt fogják a végén betölteni az LLM Promptjába. Tökéletes eredményt adva.`
+        },
+        {
+            id: "3-10",
+            text: "Re-ranking, relevancia javítás és Multi-modal RAG",
+            subcategory: "Advanced technikák",
+            content: `## Haladó RAG Csiszológépek
+
+Ahogy egy RAG rendszer megnő, és 10,000 PDF figyel benne, hiába használunk Hibrid keresőt, a kapott Top 20 dokumentumból a Legfontosabb mondat a 18. pozícióba kerül és az LLM "elveszhet be" a Prompt hosszú alján. Ezen segít a Rerank (ÚjraRendező) háló.
+
+### Cohere Re-Ranking (Cross-Encoders)
+Amikor a te Vektor Adatbázisod (gyorsan és olcsón) kidob magából egy "Nagyjából" jó százas lekérést (Top 100), közbelép egy Második, nagyon kis dedikált háló (Sokszor a Cohere nevű cég Rerank modellje). Ez iszonyat pontos, de lassú.
+A Rerank megnézi mind a 100 eredményt felülről-lefelé, pontot ad nekik, és **Újrasorakoztatja az egészet precíziós szikén**, így a 18. helyen lévő releváns rész feltűnik az 1. pozícióba! Ezt kapja meg végül az LLM, csökkentve a hallucinációt.
+
+### Multi-Modal RAG
+Amikor nem csak Szöveget vektorizálok. Gondolj bele: beolvasol egy 100 oldalas pénzügyi riportot PDF-ből. És ha kérdezed a bevételt, megmondja, de a pdf-ben lévő **oszám diagramot (Képet)** is visszaadja a képernyőre forrásként a szöveg mellé, mert egyszerre értelmezte a grafikát a szöveggel együtt! (CLIP modellek).`
+        }
     ],
 
     whenToChoose: [
