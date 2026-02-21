@@ -39,9 +39,7 @@ Provide a short, constructive educational feedback in Hungarian language.
 `;
 
         const { object: evaluation } = await generateObject({
-            model: google('gemini-1.5-flash', {
-                structuredOutputs: true,
-            }),
+            model: google('gemini-1.5-flash'),
             schema: z.object({
                 passed: z.boolean().describe('True if the generated text achieves the goal and meets all constraints.'),
                 score: z.number().min(0).max(100).describe('Score from 0 to 100 based on how well it did.'),
