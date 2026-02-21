@@ -13,6 +13,7 @@ export const module04: Module = {
         "Nem tudom, hogyan strukturáljam a promptot"
     ],
 
+    hasPromptTester: true,
     curriculum: [
         {
             id: "4-1",

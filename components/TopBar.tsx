@@ -9,12 +9,17 @@ import { useEffect, useState } from "react";
 
 export function TopBar() {
     const getOverallProgress = useProgressStore(state => state.getOverallProgress);
+    const checkStreak = useProgressStore(state => state.checkStreak);
+    const xp = useProgressStore(state => state.xp);
     const [progress, setProgress] = useState(0);
+    const [mounted, setMounted] = useState(false);
 
-    // Prevent hydration warnings
+    // Prevent hydration warnings and trigger streak check
     useEffect(() => {
         setProgress(getOverallProgress());
-    }, [getOverallProgress]);
+        checkStreak();
+        setMounted(true);
+    }, [getOverallProgress, checkStreak]);
 
     return (
         <header className="sticky top-0 z-50 w-full border-b border-border bg-background/80 backdrop-blur-md supports-[backdrop-filter]:bg-background/60">
@@ -39,14 +44,20 @@ export function TopBar() {
                             Teljes Haladás
                         </span>
                         <span className="text-xs font-bold text-primary">
-                            {progress}%
+                            {mounted ? progress : 0}%
                         </span>
                     </div>
-                    <ProgressBar progress={progress} className="h-1.5 sm:h-2" />
+                    <ProgressBar progress={mounted ? progress : 0} className="h-1.5 sm:h-2" />
                 </div>
 
-                {/* End Actions */}
-                <div className="flex items-center gap-2 ml-auto">
+                {/* End Actions (XP & Theme) */}
+                <div className="flex items-center gap-3 ml-auto">
+                    {mounted && (
+                        <Link href="/profil" className="flex items-center gap-1.5 bg-amber-500/10 text-amber-500 hover:bg-amber-500/20 px-3 py-1.5 rounded-full font-bold border border-amber-500/20 shadow-inner transition-colors">
+                            <span className="text-sm">{xp}</span>
+                            <span className="text-[10px] uppercase tracking-wider opacity-80 mt-0.5">XP</span>
+                        </Link>
+                    )}
                     <ThemeToggle />
                 </div>
 

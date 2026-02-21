@@ -6,10 +6,21 @@ interface ProgressState {
     completedModules: number[];
     completedCurriculumItems: Record<number, string[]>; // moduleId -> array of item ids
 
+    // Gamification
+    xp: number;
+    unlockedBadges: string[];
+    lastLoginDate: string | null;
+    streakDays: number;
+
     toggleModuleComplete: (moduleId: number) => void;
     toggleCurriculumItem: (moduleId: number, itemId: string) => void;
     getModuleProgress: (moduleId: number) => number;
     getOverallProgress: () => number;
+
+    // Gamification Actions
+    addXp: (amount: number) => void;
+    unlockBadge: (badgeId: string) => void;
+    checkStreak: () => void;
 }
 
 export const useProgressStore = create<ProgressState>()(
@@ -18,9 +29,18 @@ export const useProgressStore = create<ProgressState>()(
             completedModules: [],
             completedCurriculumItems: {},
 
+            xp: 0,
+            unlockedBadges: [],
+            lastLoginDate: null,
+            streakDays: 0,
+
             toggleModuleComplete: (moduleId: number) => {
                 set((state) => {
                     const isCompleted = state.completedModules.includes(moduleId);
+                    if (!isCompleted) {
+                        // Reward XP on module completion
+                        get().addXp(50);
+                    }
                     return {
                         completedModules: isCompleted
                             ? state.completedModules.filter(id => id !== moduleId)
@@ -33,6 +53,11 @@ export const useProgressStore = create<ProgressState>()(
                 set((state) => {
                     const moduleItems = state.completedCurriculumItems[moduleId] || [];
                     const isCompleted = moduleItems.includes(itemId);
+
+                    if (!isCompleted) {
+                        // Reward XP for checking off items
+                        get().addXp(10);
+                    }
 
                     const newModuleItems = isCompleted
                         ? moduleItems.filter(id => id !== itemId)
@@ -71,6 +96,46 @@ export const useProgressStore = create<ProgressState>()(
 
                 if (totalItems === 0) return 0;
                 return Math.round((totalCompleted / totalItems) * 100);
+            },
+
+            addXp: (amount: number) => {
+                set((state) => ({ xp: state.xp + amount }));
+            },
+
+            unlockBadge: (badgeId: string) => {
+                set((state) => {
+                    if (!state.unlockedBadges.includes(badgeId)) {
+                        return { unlockedBadges: [...state.unlockedBadges, badgeId] };
+                    }
+                    return state;
+                });
+            },
+
+            checkStreak: () => {
+                const today = new Date().toISOString().split('T')[0];
+                set((state) => {
+                    if (state.lastLoginDate === today) return state; // Already checked today
+
+                    if (!state.lastLoginDate) {
+                        return { lastLoginDate: today, streakDays: 1 };
+                    }
+
+                    const lastDate = new Date(state.lastLoginDate);
+                    const currentDate = new Date(today);
+                    const diffTime = Math.abs(currentDate.getTime() - lastDate.getTime());
+                    const diffDays = Math.ceil(diffTime / (1000 * 60 * 60 * 24));
+
+                    if (diffDays === 1) {
+                        // Consecutive day
+                        const newStreak = state.streakDays + 1;
+                        if (newStreak === 3) get().unlockBadge('Kitartó Tanuló');
+                        return { lastLoginDate: today, streakDays: newStreak };
+                    } else if (diffDays > 1) {
+                        // Broken streak
+                        return { lastLoginDate: today, streakDays: 1 };
+                    }
+                    return state;
+                });
             }
         }),
         {

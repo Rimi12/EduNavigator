@@ -39,7 +39,8 @@ export interface Module {
   projects: Project[];
   resources: Resource[];
   dayInSchedule: string; // e.g., "Nap 1"
-  
+  hasPromptTester?: boolean;
+
   // Interactive features (optional)
   microLearning?: string; // Coffee Break content
   deepDive?: string; // Markdown formatted Deep Dive

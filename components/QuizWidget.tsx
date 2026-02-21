@@ -5,6 +5,7 @@ import { QuizQuestion } from "@/types";
 import { CheckCircle2, XCircle, Brain } from "lucide-react";
 import confetti from "canvas-confetti";
 import { cn } from "@/lib/utils";
+import { useProgressStore } from "@/lib/progressStore";
 
 export function QuizWidget({ quiz }: { quiz: QuizQuestion }) {
     const [selectedIdx, setSelectedIdx] = useState<number | null>(null);
@@ -38,11 +39,22 @@ export function QuizWidget({ quiz }: { quiz: QuizQuestion }) {
         }());
     };
 
+    const addXp = useProgressStore(state => state.addXp);
+    const unlockBadge = useProgressStore(state => state.unlockBadge);
+
+    // We track if this specific quiz was already answered correctly to prevent infinite XP farming
+    const [hasRewarded, setHasRewarded] = useState(false);
+
     const handleSubmit = () => {
         if (selectedIdx === null) return;
         setIsSubmitted(true);
         if (selectedIdx === quiz.correct) {
             triggerConfetti();
+            if (!hasRewarded) {
+                addXp(20);
+                unlockBadge("Első Kvíz Hibátlanul");
+                setHasRewarded(true);
+            }
         }
     };
 

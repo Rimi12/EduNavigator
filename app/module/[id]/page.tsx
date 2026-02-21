@@ -13,6 +13,7 @@ import * as Icons from "lucide-react";
 import { cn } from "@/lib/utils";
 import { useProgressStore } from "@/lib/progressStore";
 import { useShallow } from 'zustand/react/shallow';
+import { PromptTester } from "@/components/PromptTester";
 
 export default function ModulePage({ params }: { params: Promise<{ id: string }> }) {
     const resolvedParams = use(params);
@@ -177,6 +178,17 @@ export default function ModulePage({ params }: { params: Promise<{ id: string }>
                             </div>
                         ))}
                     </div>
+                </section>
+            )}
+
+            {/* Prompt Tester Section */}
+            {module.hasPromptTester && (
+                <section className="mb-16">
+                    <h2 className="text-2xl font-bold mb-6 flex items-center gap-2">
+                        <Icons.Sparkles className="w-6 h-6 text-primary" />
+                        AI Labor - Próbáld ki Te is!
+                    </h2>
+                    <PromptTester defaultTemp={0.7} />
                 </section>
             )}
 
