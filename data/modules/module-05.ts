@@ -16,9 +16,52 @@ export const module05: Module = {
     ],
 
     curriculum: [
-        { id: "5-1", text: "Leíró statisztika alapjai", subcategory: "Statisztika" },
-        { id: "5-2", text: "Megértés: Valószínűségi alapok és hipotézisvizsgálat", subcategory: "Statisztika" },
-        { id: "5-3", text: "Confusion matrix: Precision, Recall, F1-score", subcategory: "Metrikák" },
+        {
+            id: "5-1",
+            text: "Leíró statisztika alapjai",
+            subcategory: "Statisztika",
+            videoUrl: "https://www.youtube.com/embed/xxpc-HPKN28",
+            content: `## Ne félj a Statisztikától!
+
+Amikor AI-val adatokat dolgozunk fel, sokszor 100 000+ soros fájlokat sózunk "rá" a gépre. Ha nem értjük meg a leíró statisztika alappilléreit, esélyünk sincs feladatot adni neki.
+
+Hogyan "látja" a számítógép a te oszlopaidos adataidon lévő eloszlást?
+1. **Átlag (Mean):** Az összes szám összege elosztva a darabszámmal. Szuper hasznos, de csalóka is lehet (Ha te megeszel 2 almát, én 0-t, papíron átlagosan ettünk 1-1-et, mégis éhen halok).
+2. **Medián (Median):** Ha sorba rendezzük az értékeket a legkisebbtől a legnagyobbig, ez lesz a középső érték. Ellenállóbb a kiugró gazdag v. szegény emberek torzító "átlag" erejének.
+3. **Módusz (Mode):** A leggyakoribb adat. Miből van a legtöbb a listánkon?
+4. **Szórás (Standard Deviation):** A legfontosabb metrika! Azt mondja meg, hogy az adatok mekkora része (rendszerint ~68% egy haranggörbénél) tér el átlagosan magától a normál vonaltól.`
+        },
+        {
+            id: "5-2",
+            text: "Megértés: Valószínűségi alapok és hipotézisvizsgálat",
+            subcategory: "Statisztika",
+            content: `## Biztosan jól döntött a Gépünk? (A Szignifikancia)
+Gyakori probléma vállalati környezetben: a "Pistikének" adtunk 10 promptot hogy fordítson angolra, és a "Gépnek" is. A "Gép" 10%-kal jobb lett.
+Biztosan kijelenthetjük, hogy a mi AI-unk a király, és sosem hibázik innentől?
+**Nem.** Túl kevés a teszt adat ($N=10$). Ilyenkor lép színre a *Hipotézisvizsgálat*.
+
+### Az A/B Tesztelés (A P-value koncepciója)
+Az AI teljesítmény optimalizálásnál (A/B teszt) a legkisebb véletlen torzítás is komoly anyagi bukásokhoz is vezethet.
+
+1. Felállítod a Null Hipotézist (pl.: *A modell A és az új B modell promptjai között valójában nincs igazi különbség a teljesítményben*). 
+2. Futtatod az A/B tesztet minimum 1000 iterációval.
+3. Megnézed a P-value (P-érték) mutatót, amit a gép visszaad. Ha a p-value kisebb mint **0.05**, akkor örülhetsz! Matematikailag bebizonyítottad, hogy az új B prompt fejlesztésed valójában működik, és a 10%-os javulás nem csupán a vakszerencsén múlt!`
+        },
+        {
+            id: "5-3",
+            text: "Confusion matrix: Precision, Recall, F1-score",
+            subcategory: "Metrikák",
+            content: `## A Tökéletesség Illúziója (F1-Score)
+Létezik egy "Confusion Matrix" (Zavarottsági Mátrix) nevezetű táblázat. A klasszifikációs AI modelleknél erre kell elsőnek rálépnünk, hogy kiderüljön: mennyire "hülye" az algoritmusunk.
+
+Az *Accuracy (Pontosság)* megtévesztő lehet, ha az adatok egyenlőtlenek!
+Tegyük fel, hogy 100 páciens van, és 1 beteg közülük. Az AI azt mondja, hogy *"Senki sem beteg"*. Így a Pontosság 99%-os, mégis a tesztünk borzalmas és felháborító volt!
+
+Hogyan mérjük helyesen?
+- **Precision (Precízió):** Hányat talált el abból, amire "Lövést" adott le? *"Amikor az AI beteget jelzett ki, az esetek hány százalékában volt ténylegesen is beteg?"*
+- **Recall (Érzékenység/Visszahívás):** Kívülről is látja a "célt"? *"Az összes (1 db) beteg közül hány százalékát találta meg az AI?"* Esetünkben 0%-ot. Itt bukik el az AI orvos.
+- **F1 Score:** Egy kiegyensúlyozott, arany középút a Precision és a Recall között, ami egyetlen százalékban mondja meg, merre tartasz.`
+        },
         { id: "5-4", text: "Token usage és költség elemzés", subcategory: "Metrikák" },
         { id: "5-5", text: "RAG retrieval accuracy: Hit rate, MRR", subcategory: "Metrikák" },
         { id: "5-6", text: "LLM output minőségmérés: BLEU, ROUGE", subcategory: "Metrikák" },

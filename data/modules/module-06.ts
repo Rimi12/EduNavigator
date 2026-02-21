@@ -16,9 +16,48 @@ export const module06: Module = {
     ],
 
     curriculum: [
-        { id: "6-1", text: "Microservice-alapú AI rendszerek", subcategory: "Rendszer architektúra" },
-        { id: "6-2", text: "Agent orchestration layer (control plane)", subcategory: "Rendszer architektúra" },
-        { id: "6-3", text: "Memory management (short-term vs. long-term)", subcategory: "Rendszer architektúra" },
+        {
+            id: "6-1",
+            text: "Microservice-alapú AI rendszerek",
+            subcategory: "Rendszer architektúra",
+            videoUrl: "https://www.youtube.com/embed/1B1jV9aR7Gg",
+            content: `## A Szoftverfejlesztés Darabolása (Microservices)
+
+Régen, ha egy csapat fejlesztett például egy HR felvételi Rendszert, mindent *beleírtak egyetlen hatalmas, összetartozó kódba (Monolith)*. Pistikének és Marcsinak is ugyanabba a fájl-szörnybe kellett nyúlnia munka közben. Ha beszakadt a Bejelentkezés 02:00-kor, magával rántotta a Számlázást és az egész weboldalt is. 
+
+Ennek a rémálomnak ma vége!
+
+A **Microservice (Mikroszolgáltatás) architektúra** során a programodat több egyfüggetlen al-programra szeleteled szét (pl. van egy mikro-program, ami CSAK bejelentkeztet, és semmi mást). Miért fontos ez az AI-nál?
+1. Lecserélheted az egyik Microservice-ben lévő LLM-et (pl. GPT-ről Claude-ra) anélkül, hogy a rendszer további 90%-át újra kéne csomagolnod hiba miatt.
+2. A Microservice-ek között az üzenetváltás egyszerű hálózati API kérésekkel zajlik, akárcsak az ügynökök (Agents) között. `
+        },
+        {
+            id: "6-2",
+            text: "Agent orchestration layer (control plane)",
+            subcategory: "Rendszer architektúra",
+            content: `## A karmester (Orchestration Layer)
+Mikor több mesterséges intelligencia-ügynökkel dolgozol (az egyik API adatot tisztáz, a másik RAG-ban keres) egy "káoszelhárítóra" lesz szükséged. Ezt hívják **Orchestrator**-nak (Karmesternek) az úgynevezett "Control Plane"-ben.
+
+### Mik a Karmaester Feladatai?
+- Tudja, éppen "ki kinél ketyeg". Melyik feladat hol akadt el?
+- Elosztja az információcsomagokat (Load Balancing). Ha az egyik adatszűrő ágens befogja az adatot és lassítja a gépezetet, a Karmester indít egy 2. számú klón-ügynököt mellé a felhőben.
+- Ő értékeli az eredményeket, futtatja a Supervisor ellenőrzéseket, és irányítja a Human-in-the-Loop embert ha döntés kell.
+Ilyen komplex karmester eszköz például a **LangGraph** Python csomagja, ami elképesztő precizitással vizualizálja a "ki, kinek, mit ad át" workflowt gráfokban.`
+        },
+        {
+            id: "6-3",
+            text: "Memory management (short-term vs. long-term)",
+            subcategory: "Rendszer architektúra",
+            content: `## Az AI Emlékezete
+
+A generatív AI rendszerek valójában - alapállapotban - komoly "Alzheimer kórral" küzdenek. A ChatGPT azért nem felejti el még a 10. üzenetváltásban sem, hogy miről beszéltetek, mert a háttérben **minden egyes** rákérdezési gombnyomáskor feltöltődik *az összes eddig elhangzott korábbi szöveg* is (mint a Short-Term memory) a vadonatúj kérdésed mellé.
+
+### 1. Rövid távú Memória (Short-Term Memory)
+- Ez egy adott chat ablak / session alatt él. Az előző 10 kérdés-válasz pár folyamatosan ott lebeg a promptban. Villámgyors, de hamar betelik a karakter-limitje, "elveszíti a fonalat".
+
+### 2. Hosszú távú Memória (Long-Term Memory)
+- Egy professzionális AI ügynök ennél többet tud. Ő egy úgynevezett **Vektor Adatbázissal** van rákötve a hosszú távú memóriára, ahová hetekkel/hónapokkal később is "el tud menteni" infókat (RAG fázisban). Akár 1 évvel ezelőtti panaszlevelet is azonnal magához ragadhat ebből a memóriablokkból.`
+        },
         { id: "6-4", text: "Tool integration és API management", subcategory: "Rendszer architektúra" },
         { id: "6-5", text: "Multi-agent kommunikációs protokollok", subcategory: "Rendszer architektúra" },
         { id: "6-6", text: "State management és session handling", subcategory: "Építőelemek" },

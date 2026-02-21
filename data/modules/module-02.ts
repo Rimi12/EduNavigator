@@ -16,9 +16,56 @@ export const module02: Module = {
     ],
 
     curriculum: [
-        { id: "2-1", text: "Mi az Agentic AI és hogyan különbözik a hagyományos AI-tól", subcategory: "Alapfogalmak" },
-        { id: "2-2", text: "Autonóm ügynökök architektúrája (észlelés, tervezés, cselekvés)", subcategory: "Alapfogalmak" },
-        { id: "2-3", text: "Multi-agent rendszerek és koordináció", subcategory: "Alapfogalmak" },
+        {
+            id: "2-1",
+            text: "Mi az Agentic AI és hogyan különbözik a hagyományos AI-tól",
+            subcategory: "Alapfogalmak",
+            videoUrl: "https://www.youtube.com/embed/F8NKVhkZZWI",
+            content: `## Agentic AI: A Cselekvő Képes Modellek
+
+A hagyományos (nem ágens-alapú) AI működése egy egyenes válaszgépre hasonlít: Te kérdezel valamit (pl. "Mennyi az idő Londonban?"), ő pedig tudásának megfelelően válaszol (vagy hallucinál, ha nem tudja).
+
+Ezzel szemben az **Agentic AI** (Ágens) egy *autonóm döntéshozó*. Ahelyett, hogy egyből válaszolna, egy sor közbenső lépést képes magától végrehajtani:
+1. Felismeri, hogy friss adatra van szüksége az időről.
+2. Megfogja a "Web Kereső" (Tool) nevű eszközt, amire megtanították.
+3. Lekéri az aktuális londoni időt.
+4. Feldolgozza az eredményt és *csak ezután* írja meg neked a végső választ.
+
+**Miért forradalmi ez?** Mert az emberhez hasonlóan képes aszinkron módon problémát megoldani, más rendszerekkel (API-k) kommunikálni és visszacsatolás alapján korrigálni is önmagát.`
+        },
+        {
+            id: "2-2",
+            text: "Autonóm ügynökök architektúrája (észlelés, tervezés, cselekvés)",
+            subcategory: "Alapfogalmak",
+            content: `## Az Ügynökök "Anatómiája"
+
+Minden Autonóm Ágens három fő pilléren nyugszik. Ha ezek egyike is hiányzik, az ügynök megbénul:
+
+### 1. Észlelés (Perception)
+A modell képes befogadni és megérteni a bejövő információt. Ez lehet egy általad leírt szöveg (Prompt), egy rátöltött dokumentum, vagy épp egy lekérdezett weboldal végeredménye.
+
+### 2. Tervezés (Planning)
+Ezen a ponton az AI "elgondolkozik". Ez a legfontosabb különbség a sima ChatGPT-hez képest.
+A tervezés fázisában az Ágens célokra (Goals) és rész-feladatokra (Sub-tasks) bontja le a nagy kérést. Pl: *"Ha írnom kell egy elemzést az Apple részvényekről, előbb le kell töltenem az egy heti árfolyamot (Feladat A), majd megnézni a friss híreket (Feladat B), és a végén összegzem (Feladat C)."*
+
+### 3. Cselekvés (Action)
+Miután megvan a terv, az Ágens akcióba lép a rendelkezésére bocsátott eszközök segítségével, és akár párhuzamosan is megkezdi a feladatok automatikus végrehajtását.`
+        },
+        {
+            id: "2-3",
+            text: "Multi-agent rendszerek és koordináció",
+            subcategory: "Alapfogalmak",
+            content: `## Amikor Egy AI Nem Elég: Multi-Agent Systems
+Ahogy te sem egyetlen embertől várod, hogy zseniálisan programozzon, designoljon, majd legyen a marketinges és a HR vezetőd egy személyben, úgy az AI-októl is hiba ezt elvárni.
+
+A **Multi-Agent Systems (Többszereplős Ügynöki Rendszerek, pl. CrewAI vagy AutoGen)** lényege, hogy több, specifikusan finomhangolt AI modellt engedünk össze egy virtuális szobába, akik *egymással tudnak kommunikálni*.
+
+### Így néz ki egy tipikus Multi-Agent Workflow:
+1. **A Főnök (Manager Agent):** Megkapja tőled a nagy kérést. Lebontja azt kis részfeladatokra, amiket kioszt.
+2. **A Kutató (Researcher Agent):** A Főnök parancsára kimegy a netre, letölti a cikkeket, és csak a megadott témáról küld vissza egy összegzést (nem foglalkozik struktúrával vagy stílussal).
+3. **Az Író (Writer Agent):** Megkapja a Kutató nyers adatait, és valaki más tollából egy tökéletes blogposztot varázsol belőle.
+4. **Az Ellenőr (Quality Control Agent):** Végül egy kifejezetten "kritikusra" hangolt Ágens átnézi az író munkáját, és visszadobja javításra, ha nem felel meg az irányelveknek.`
+        },
         { id: "2-4", text: "Agent memória és állapotkezelés", subcategory: "Alapfogalmak" },
         { id: "2-5", text: "Eszköz használat és API integráció", subcategory: "Alapfogalmak" },
         { id: "2-6", text: "ReAct minta: Rövid gondolkodás + azonnali cselekvés", subcategory: "Workflow Minták" },

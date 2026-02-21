@@ -16,9 +16,51 @@ export const module09: Module = {
     ],
 
     curriculum: [
-        { id: "9-1", text: "Supervised Fine-Tuning (SFT) Labeled adatokkal", subcategory: "Finomhangolási Technikák" },
-        { id: "9-2", text: "Parameter-Efficient Fine-Tuning (PEFT, LoRA, QLoRA)", subcategory: "Finomhangolási Technikák" },
-        { id: "9-3", text: "Instruction tuning és RLHF alapok", subcategory: "Finomhangolási Technikák" },
+        {
+            id: "9-1",
+            text: "Supervised Fine-Tuning (SFT) Labeled adatokkal",
+            subcategory: "Finomhangolási Technikák",
+            videoUrl: "https://www.youtube.com/embed/eC6Hd1hFvos",
+            content: `## Irányított Finomhangolás (SFT)
+
+A hagyományos, "nyers" nyelvi modellek csak a következő szót próbálják megtippelni. Ha beírod nekik, hogy: *"A fővárosa Franciaországnak: "*, nem biztos hogy azt mondják *"Párizs"*. Lehet, hogy kiegészítik a kérdést egy másik kérdéssel: *"és Olaszországnak?"*. Mert egy internetes fórumon (amin nevelkedtek) így nézett ki a kontextus.
+
+Ezen segít a **SFT (Supervised Fine-Tuning)** – a felügyelt finomhangolás.
+Készítesz párezer *tökéletes* Felhasználó-Asszisztens kérdés-válasz párt:
+- **Felhasználó:** Mi Prizs fővárosa?
+- **Asszisztens:** Franciaország fővárosa Párizs.
+
+Ezeket feltöltöd az algoritmusba, és utasítod: *"Ne csak szavakat találj ki, hanem kövesd ezt a párbeszédes szerkezetet és viselkedési mintát!"* Ettől lesz a ChatGPT chathöz hasonló, és nem csak egy szógenerátor.`
+        },
+        {
+            id: "9-2",
+            text: "Parameter-Efficient Fine-Tuning (PEFT, LoRA, QLoRA)",
+            subcategory: "Finomhangolási Technikák",
+            content: `## Hogyan spóroljunk tízezer dollárokat videókártyákon? (PEFT)
+
+Egy 70 milliárd paraméteres, nagy tudású nyelvi modell (LLM) betanítása több tízmillió dollárba kerül, mivel az össze neuronális kapcsolat sulyozását frissíteni kell rajta menetről menetre. Ezt egy hétköznapi cég nem tudja kifizetni a frissítésre (Fine-Tuning).
+
+### A megoldás: PEFT és LoRA
+A Parameter-Efficient Fine-Tuning (Hatékony Finomhangolás) filozófiája, hogy *Fagyasszuk be az eredeti modellt* amennyire csak lehet, hogy ne használja a VRAM-ot! 
+- **LoRA (Low-Rank Adaptation):** A LoRA a teljes, "befagyasztott agy" mellé csatol egy sokkal kisebb, másodlagos "memória blokkot" (adaptert), amiben csak a megváltozott feladathoz mérten tárol 1-2 millió módosítást az erediheti milliárdos adatmennyiséggel megemelve. Ezt az 1%-os kicsi hálót már akár otthon, egy gamer videókártyán is tudod tréningezni órák alatt! Amikor végeztél, a frissítést "összesütöd" a nagy modellel.`
+        },
+        {
+            id: "9-3",
+            text: "Instruction tuning és RLHF alapok",
+            subcategory: "Finomhangolási Technikák",
+            content: `## Emberi visszajelzések az AI betanításában (RLHF)
+
+Honnan "tudja" a ChatGPT, hogy ne adjon receptet csőbombákhoz, dacára annak hogy az interneten az elkészítési leírás bőségesen megtalálható volt a tanulóadataiban?
+
+**RLHF (Reinforcement Learning from Human Feedback) - Emberi Visszajelzésen Alapuló Megerősítéses Tanulás:**
+Ez a módszer az ipari sztenderd az AI biztonságossá, udvariassá és pontossá tételére (Gyakorlatilag ettől is ChatGPT a ChatGPT).
+
+### A Folyamat Lépései:
+1. Az AI legenerál 4-5 különböző opciót egy veszélyes kérdésre.
+2. Egy emberi értékelő (Human Annotator) a háttérben **sorba rendezi** (Rankeli) a válaszokat aszerint, melyik a leghasznosabb, és melyik a legmérgezőbb.
+3. Ebből a sorbarendezésből betanítanak egy kisebb, "jutalmazó AI-t" (Reward Model), aki megtanulja, mik az emberek preferenciái.
+4. Ezután a fő modell elkezdi ontani a válaszokat magából, de ha a kicsi Jutalmazó AI úgy ítéli meg, a kimenet csőbomba-recept, vastagon "Büntetőpontot" oszt ki az LLM-nek, így az a végére megtanulja az etikus viselkedést!`
+        },
         { id: "9-4", text: "Learning rate scheduling, batch size tuning", subcategory: "Hyperparameter optimalizálás" },
         { id: "9-5", text: "Epoch selection és optimizer választás", subcategory: "Hyperparameter optimalizálás" },
         { id: "9-6", text: "Quantization (Kvantálás) technikái: 16-bit, 8-bit, 4-bit", subcategory: "Modell tömörítés" },

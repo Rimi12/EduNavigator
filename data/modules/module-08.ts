@@ -16,9 +16,48 @@ export const module08: Module = {
     ],
 
     curriculum: [
-        { id: "8-1", text: "Observability 3 pillére: Logs, Metrics, Traces", subcategory: "Monitoring rendszerek" },
-        { id: "8-2", text: "APM (Application Performance Monitoring) rendszerek", subcategory: "Monitoring rendszerek" },
-        { id: "8-3", text: "Model accuracy trends mérése időben", subcategory: "AI-specifikus metrikák" },
+        {
+            id: "8-1",
+            text: "Observability 3 pillére: Logs, Metrics, Traces",
+            subcategory: "Monitoring rendszerek",
+            videoUrl: "https://www.youtube.com/embed/nL6nS9qF8vQ",
+            content: `## Vakrepülés helyett: Observability
+
+Ha kész az AI rendszered (pl: RAG alapú ügyfélszolgálat) és fut a felhőben, honnan tudod, hogy épp most miért adott 3 perces várakozási időt az ügyfélnek, mielőtt kitalált volna egy rossz választ?
+
+Az Observability (Megfigyelhetőség) a megoldás. Nem elég, ha csak utólag "ránézünk" a dolgokra. 3 pillér tartja életben a rendszered:
+
+1. **Logs (Naplók):** Események időbélyeggel ellátott feljegyzése. *"12:02:44 - Az OpenAI API hibaüzenettel (Rate Limit) visszadobta a kérést."*
+2. **Metrics (Metrikák):** Aggregált (összevont) számok tágabb kontextusban. *"Az elmúlt 10 percben átlagosan 8 másodperc volt a válaszidőnk, a CPU pedig 90%-on pörög."*
+3. **Traces (Nyomkövetés):** Az igazi AI aduász! A felhasználó beír egy 'Sziát!', erre létrejön egy egyedi azonosító kód (Trace ID). Ezt a kódot végig kísérjük a Frontend -> Backend -> Vector Adatbázis -> LLM -> Backend láncolaton, és megmérjük, melyik komponens mennyi tizedmásodpercet emésztett fel.`
+        },
+        {
+            id: "8-2",
+            text: "APM (Application Performance Monitoring) rendszerek",
+            subcategory: "Monitoring rendszerek",
+            content: `## Mit tud egy jó APM Szoftver?
+
+Az APM (Alkalmazás Teljesítmény Monitorozás) rendszerek (mint a **Datadog**, **New Relic**, vagy a nyílt forráskódú **OpenTelemetry**) az előzőleckében megismert 3 pillérből készítenek emberi, olvasható Dashboardokat (műszerfalakat).
+
+### AI specifikus APM (LLMOps)
+Képzeld el, hogy a hagyományos APM csak annyit jelez: *"Sokáig tartott az adatbázis lekérés"*. Egy modern, AI-ra szakosodott APM eszköz (pl. LangSmith, Weights & Biases) vizuálisan meg is mutatja neked a teljes prompt láncodat:
+- Mikor, mit kérdezett a felhasználó?
+- Mi volt a pontos RAG által kinyert kontextus, ami az LLM-hez került?
+- Mennyibe került (dollárcent) ez az egyetlen üzenetváltás a felhasznált tokenek alapján?
+- Ki lehet vizsgálni egérkattintással, hol volt a hallucináció gyökere a hálózatban.`
+        },
+        {
+            id: "8-3",
+            text: "Model accuracy trends mérése időben",
+            subcategory: "AI-specifikus metrikák",
+            content: `## Ne hagyd, hogy butuljon a model!
+
+A "Drift" a legnagyobb félelme az AI mérnököknek. A Drift jelentése, amikor a modell felépítése ugyanaz, de a valós világbeli válaszai hónapok múltán egyre gyengébbek és falsabbak lesznek.
+
+### Hogyan mérhetjük ezt (Accuracy Trends)?
+Minden hónapban futtatnod kell egy automatizált tesztet, ami egy "Arany Adathalmazból" (Golden Dataset) merít. Ez a dataset tartalmaz 100 olyan promptot és az ahhoz tartozó *tökéletes* választ, amit te és a domén szakértők hónapokig egyeztettetek.
+Az APM rendszered lefuttatja a 100 promptot a jelenlegi AI rendszeren, és összehasonlítja az eredményeket a "tökéletessel". Ha ez a mérőszám rohamosan esik 90%-ról 70%-ra, azonnal tudd meg mielőtt az ügyfelek veszik észre! `
+        },
         { id: "8-4", text: "User satisfaction (CSAT, Thumb Up/Down) gyűjtése", subcategory: "AI-specifikus metrikák" },
         { id: "8-5", text: "Eval datasetek készítése reprezentatív adatokból", subcategory: "Értékelési keretrendszerek" },
         { id: "8-6", text: "Human evaluation vs Automated Evaluation", subcategory: "Értékelési keretrendszerek" },

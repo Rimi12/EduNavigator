@@ -16,9 +16,51 @@ export const module10: Module = {
     ],
 
     curriculum: [
-        { id: "10-1", text: "AI Code Assistants: GitHub Copilot, Cursor", subcategory: "Fejlesztői eszközök" },
-        { id: "10-2", text: "IDE-k és kiterjesztések: VS Code", subcategory: "Fejlesztői eszközök" },
-        { id: "10-3", text: "CLI tools: LangChain CLI, LlamaIndex CLI", subcategory: "Fejlesztői eszközök" },
+        {
+            id: "10-1",
+            text: "AI Code Assistants: GitHub Copilot, Cursor",
+            subcategory: "Fejlesztői eszközök",
+            videoUrl: "https://www.youtube.com/embed/5D3x8H13Eew",
+            content: `## Kódolás "Párosban": AI Code Assistants
+
+Az AI ma már nem csak kérdések megválaszolására alkalmas, hanem a legjobb munkaeszköz a programozók kezében.
+Szárnykövetőnek is hívhatnók őket. Beépülnek a kódszerkesztődbe és a következőket végzik:
+- **Automatikus kiegészítés (Autocomplete):** Már nem csak sima szavakat egészít ki, ha látja, hogy elkezdtél egy lekérdezést, de még csak a félszót pötyögted be, képes 10-20 sort, a teljes függvény logikáját kikövetkeztetni, neked csak egy tab-ot kell nyomni és elfogadni.
+- **Kód magyarázat:** Kijelölöd a 200 soros ősi, olvashatatlan kódot, nyomsz egy Ctrl+L-t, és megkérdezed: *"Mit csinál ez pontosan?"*. És megmondja.
+- **Automata refaktorálás:** Megkérheted, hogy *"Cseréld ki az összes változónevet angolra, és tegyél hibakezelést is alá."* 
+
+Az iparági sztenderdek ma a **GitHub Copilot** (Ami kicsit régebbi, de mindenhol jelen lévő), és a zseniális trónkövetelő, a **Cursor IDE**. (lásd a következő pontot)`
+        },
+        {
+            id: "10-2",
+            text: "IDE-k és kiterjesztések: VS Code vs Cursor",
+            subcategory: "Fejlesztői eszközök",
+            content: `## A Választás: VS Code Módosítva vagy Cursor?
+
+Ha komolyan kódolsz, vagy életedben először állnál neki az AI segítségével, a választás kulcsfontosságú.
+
+### VS Code (Visual Studio Code) + Kiegészítők
+A világ legnépszerűbb fejlesztőkörnyezete. Eredetileg nem kötött mesterséges intelligenciához, de letöltheted hozzá beépülő modulként (Extension) a ChatGPT-t, a Claude-ot vagy a Copilot-ot. Ha szereted a hagyományos környezetet és ragaszkodsz a plug-in rendszerekhez tegyél fel mindent külön-külön.
+
+### Cursor: A Natív AI Szerkesztő (A Jövő)
+A **Cursor** tulajdonképpen fognott egy nyílt-forrású VS Code alapot, és egészen a "motorháztető aljáig" beépítette az LLM logikát (GPT-4o, Claude 3.5 Sonnet).
+- Különlegessége az úgynevezett **Composer (Összeállító) funkció**: Meg tudod kérni CTRL+I paranccsal, hogy csináljon egy komplex, "több fájlt érintő" változtatást: *"Gombra kattintva legyen fekete a háttér".* A Cursor tudja hogy a stílus a CSS-ben van, a gomb komponens a TSX-ben, a logika a layout fájlban. **Párhuzamosan fogja megynitni és megírni a módosításokat 3 külön fájlban, neked csak el kell fogadnod egy 'Igen'-nel.** Ezt a sima ChatGPT képtelen megoldani a weben!`
+        },
+        {
+            id: "10-3",
+            text: "CLI tools: LangChain CLI, LlamaIndex CLI",
+            subcategory: "Fejlesztői eszközök",
+            content: `## AI Munkafolyamatok a Terminálban (CLI)
+
+Gyakran a gépelős terminál (Command Line Interface - CLI) a profi fejlesztők terepe. Ha RAG projektet raksz össze (saját dokumentum integrálással), hetekig tartana a nulláról felépíteni egy mappaszerkezetet Vector Adatbázissal és LLM összekötésekkel.
+
+Ahelyett, hogy hegesztenél, használj modern AI CLI eszközöket!
+Ha telepítve van például a **LangChain**, elég beírnod egy fekete terminál ablakba annyit:
+
+\`langchain app new my-rag-project --package rag-chroma\`
+
+És Bumm! A program másodpercek alatt létrehoz egy kész, működő, professzionális mappa struktúrát, a megfelelő Python környezettel, beállított Chroma vektor adatbázissal, amit már csak csiszolnod kell a te egyéni CSV / PDF fájljaiddal.`
+        },
         { id: "10-4", text: "API testing: Postman, Insomnia AI features", subcategory: "Fejlesztői eszközök" },
         { id: "10-5", text: "Version control: Git best practices for AI projects", subcategory: "Fejlesztői eszközök" },
         { id: "10-6", text: "No-code/Low-code: LangFlow, Flowise", subcategory: "No-code/Low-code" },

@@ -16,9 +16,60 @@ export const module07: Module = {
     ],
 
     curriculum: [
-        { id: "7-1", text: "Containerizálás alapjai (Docker, Kubernetes)", subcategory: "Deployment stratégiák" },
-        { id: "7-2", text: "Felhő platformok megismerése: AWS, GCP, Azure", subcategory: "Deployment stratégiák" },
-        { id: "7-3", text: "API gateway és load balancing", subcategory: "Deployment stratégiák" },
+        {
+            id: "7-1",
+            text: "Containerizálás alapjai (Docker, Kubernetes)",
+            subcategory: "Deployment stratégiák",
+            videoUrl: "https://www.youtube.com/embed/gAkwW2tuIqE",
+            content: `## Ne Csak "Nálam Fusson"! Építs Dobozt!
+
+Az informatika történetének legnagyobb idézete az, amikor a fejlesztő mondja: *"De hát az én gépemen tökéletesen futott!"*
+Sajnos ez az AI projekteknél is így van. Lehet hogy neked fel van téve a lokális Pythonodban a Numpy meg a Pytorch a gépdre, de amint feltöltöd az éles Vállalati Szerverre a szűz Windowshoz, minden összeomlik, mert ott ezek nincsenek.
+
+Itt jön a képbe a **Docker** és a Konténerizáció.
+
+### Mi az a Docker?
+Létrehozol egy "Receptkönyvet" (Dockerfile), ami megmondja a gépnek:
+1. "Vedd elő a legújabb Python operációs rendszert."
+2. "Töltsd le ezt a 3 kiegészítőt pont ebben a verzióban."
+3. "Végül másold be az én kódomat a mappába és futtasd."
+
+Ebből a fejlesztő egy "Virtuális Dobozt" (Docker Container) süt ki, amit áttolhat pendrive-on a világ túlsó felére. Aki elindítja a dobozt, annál hajszálpontosan ugyanaz a tiszta operációs rendszer és függőségi lánc fog elindulni, ahogy te otthagytad. Nincs több inkompatibilis hiba! Sose deployolunk éles környezetbe AI motort egy sima Script feltöltéssel. Konténerizálunk!`
+        },
+        {
+            id: "7-2",
+            text: "Felhő platformok megismerése: AWS, GCP, Azure",
+            subcategory: "Deployment stratégiák",
+            content: `## Hová Rakjuk a Kész Ügynökeinket?
+
+Bár az OpenAI maga Cloud (Felhő) szolgáltatás (távoli API szerver van a motor mögött), de neked az a Python kód, ami az irányítást és Promtolást (Az Orchestrator) végzi, szintén kell hogy pörögjön 0-24 órában és ne a Te laptopod kelljen hozzá nyitva hagyni az "Íróasztal" mappában!
+
+### Cloud Szolgáltatók ("The Big 3")
+Ezek a cégek "számítógép parkokat" adnak bérbe óradíjas, másodpercdíjas elszámolással:
+
+1. **AWS (Amazon Web Services):** A világ legnagyobb, legkomplexebb, és piacvezető felhőszolgáltatója. Itt fut szinte az internet. A *Bedrock* a saját AI-kompatibilis rendszerük.
+2. **Azure (Microsoft):** A nagyvállalati biztonság etalonja, amely egyedi, privát OpenAI API felületekkel rendelkezik (tehát senkivel nem kell a nyilvános ChatGPT kvótádon osztozkodnod).
+3. **GCP (Google Cloud Platform):** A fejlesztői-barátság netovábbja, zseniális beépített Machine Learning integrációkkal (*Vertex AI*) ahol a Gemini modelleket futtathatjuk.`
+        },
+        {
+            id: "7-3",
+            text: "API gateway és load balancing",
+            subcategory: "Deployment stratégiák",
+            content: `## Védelem és Terheléselosztás
+
+Tegyük fel, hogy a kész Python AI-szolgáltatásodra belinkelésre kerül a reggeli TV műsorban. Másodpercenként 10 ezren fognak ráfrissíteni a doméne-edre. Mi fog történni az AI kérésekkel ha nem vagy felkészült?
+
+Az egy szem futó "Szerver Gép" lángolva omlik össze, és nem kap vissza senki választ!
+
+### Load Balancer (Terheléselosztó)
+A terheléselosztó a "Közlekedési Rendőr" a kapuban.
+* "Jöttök tízezren? Semmi gond! Egy pillanat és elosztom a forgalmat 5x2ezer blokkba."
+* Ezután "leklónozza" a szerveredet (Scale Out), és ráereti az egyik adagot az első, a másikat a második azonos szerver gépre párhuzamosan.
+* Mindenki boldog, a rendszer kiírja magát a hatalmas terhelést is.
+
+### API Gateway (Az előkapu)
+Mielőtt még az LLM kérdésed eljutna a motorhoz, áthalad a Gatewayen. Ő ellenőrzi, hogy jogosult vagy-e ekkora kérésre (Valid API Kulcs), vagy megnézi, nem kérted-e már pont ezt 2 másodperccel ezelőtt. Ha igen, beavatkozás nélkül kidobja neked a raktárból az adatot. Megspórolt egy drága token futtatást!`
+        },
         { id: "7-4", text: "CI/CD pipelines kialakítása AI projektekhez", subcategory: "Deployment stratégiák" },
         { id: "7-5", text: "Infrastruktúra optimalizálás: GPU vs. CPU", subcategory: "Infrastruktúra" },
         { id: "7-6", text: "Model serving frameworks: TorchServe, TensorFlow Serving", subcategory: "Infrastruktúra" },
