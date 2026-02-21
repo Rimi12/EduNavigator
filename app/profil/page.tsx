@@ -1,7 +1,7 @@
 "use client";
 
 import { useProgressStore } from "@/lib/progressStore";
-import { Award, Flame, Star, Trophy, Target, Sparkles } from "lucide-react";
+import { Award, Flame, Star, Trophy, Target, Sparkles, Copy, Download, Upload, Check } from "lucide-react";
 import { useEffect, useState } from "react";
 import { cn } from "@/lib/utils";
 
@@ -11,6 +11,76 @@ const ALL_BADGES = [
     { id: "Kitartó Tanuló", icon: Flame, description: "Zsinórban 3 napon keresztül is beléptél az oldalra.", color: "text-orange-500", bg: "bg-orange-500/10", border: "border-orange-500/20" },
     { id: "Alapozó Befejezve", icon: Target, description: "Elvégezted az első 3 bevezető AI modult.", color: "text-emerald-500", bg: "bg-emerald-500/10", border: "border-emerald-500/20" }
 ];
+
+function DataExportImporter({ type }: { type: 'export' | 'import' }) {
+    const { exportData, importData } = useProgressStore();
+    const [inputValue, setInputValue] = useState("");
+    const [status, setStatus] = useState<"idle" | "success" | "error">("idle");
+
+    const handleExport = () => {
+        const dataStr = exportData();
+        navigator.clipboard.writeText(dataStr).then(() => {
+            setStatus("success");
+            setTimeout(() => setStatus("idle"), 3000);
+        }).catch(() => setStatus("error"));
+    };
+
+    const handleImport = () => {
+        const success = importData(inputValue);
+        if (success) {
+            setStatus("success");
+            setInputValue("");
+            setTimeout(() => {
+                setStatus("idle");
+                window.location.reload(); // Reload to refresh all state
+            }, 1500);
+        } else {
+            setStatus("error");
+            setTimeout(() => setStatus("idle"), 3000);
+        }
+    };
+
+    if (type === 'export') {
+        return (
+            <div className="mt-auto pt-4 flex items-center justify-between">
+                <button
+                    onClick={handleExport}
+                    className="flex items-center gap-2 px-4 py-2 bg-primary text-primary-foreground rounded-lg font-medium hover:bg-primary/90 transition-colors"
+                >
+                    {status === "success" ? <Check className="w-4 h-4" /> : <Copy className="w-4 h-4" />}
+                    {status === "success" ? "Mentsd el valahova!" : "Kód Másolása Vágólapra"}
+                </button>
+            </div>
+        );
+    }
+
+    return (
+        <div className="mt-auto pt-4 flex flex-col gap-3">
+            <input
+                type="text"
+                placeholder="Illeszd be a biztonsági kódot ide..."
+                className="w-full px-4 py-2 rounded-lg border bg-background text-sm focus:outline-none focus:ring-2 focus:ring-primary/50"
+                value={inputValue}
+                onChange={(e) => setInputValue(e.target.value)}
+            />
+            <button
+                onClick={handleImport}
+                disabled={!inputValue.trim()}
+                className={cn(
+                    "flex items-center justify-center gap-2 px-4 py-2 rounded-lg font-medium transition-colors w-full",
+                    status === "success" ? "bg-emerald-500 text-white" :
+                        status === "error" ? "bg-red-500 text-white" :
+                            !inputValue.trim() ? "bg-muted text-muted-foreground cursor-not-allowed" :
+                                "bg-secondary text-secondary-foreground hover:bg-secondary/80"
+                )}
+            >
+                {status === "success" ? <Check className="w-4 h-4" /> : <Upload className="w-4 h-4" />}
+                {status === "success" ? "Sikeres Betöltés! Újratöltés..." :
+                    status === "error" ? "Hibás vagy sérült kód" : "Adatok Fülülírása"}
+            </button>
+        </div>
+    );
+}
 
 export default function ProfilePage() {
     const { xp, unlockedBadges, streakDays } = useProgressStore();
@@ -114,6 +184,31 @@ export default function ProfilePage() {
                         </div>
                     );
                 })}
+            </div>
+
+            {/* Data Management Section */}
+            <h2 className="text-2xl font-bold mt-12 mb-6 flex items-center gap-2">
+                <Target className="w-6 h-6 text-primary" />
+                Haladás Biztonsági Mentése (Export / Import)
+            </h2>
+            <div className="grid grid-cols-1 md:grid-cols-2 gap-6">
+                {/* Export Card */}
+                <div className="bg-card border border-border rounded-3xl p-6 flex flex-col">
+                    <h3 className="text-lg font-bold mb-2">Haladás Exportálása</h3>
+                    <p className="text-sm text-muted-foreground mb-4">
+                        Másold ki a haladásod kódját, hogy egy másik eszközön vagy böngészőben onnan folytathasd az EduNavigatort, ahol abbahagytad.
+                    </p>
+                    <DataExportImporter type="export" />
+                </div>
+
+                {/* Import Card */}
+                <div className="bg-card border border-border rounded-3xl p-6 flex flex-col">
+                    <h3 className="text-lg font-bold mb-2">Haladás Importálása</h3>
+                    <p className="text-sm text-muted-foreground mb-4">
+                        Illeszd be egy korábban kimentett haladás kódodat. Belépve ezzel felülírod a jelenlegi állásodat az eszközön!
+                    </p>
+                    <DataExportImporter type="import" />
+                </div>
             </div>
 
         </div>

@@ -4,7 +4,9 @@ import "./globals.css";
 import { ThemeProvider } from "@/components/theme-provider";
 import { TopBar } from "@/components/TopBar";
 import { Sidebar } from "@/components/Sidebar";
+import { SearchCommandPalette } from "@/components/SearchCommandPalette";
 import { OnboardingModal } from "@/components/OnboardingModal";
+import { NotebookDrawer } from "@/components/NotebookDrawer";
 
 const inter = Inter({ subsets: ["latin"] });
 
@@ -35,7 +37,9 @@ export default function RootLayout({
                 {children}
               </main>
             </div>
+            <SearchCommandPalette />
             <OnboardingModal />
+            <NotebookDrawer />
           </div>
         </ThemeProvider>
       </body>

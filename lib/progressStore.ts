@@ -2,9 +2,22 @@ import { create } from 'zustand';
 import { persist } from 'zustand/middleware';
 import { modules } from '@/data/courseData';
 
+export interface Note {
+    id: string;
+    text: string;
+    date: string;
+    moduleId?: number;
+}
+
 interface ProgressState {
     completedModules: number[];
     completedCurriculumItems: Record<number, string[]>; // moduleId -> array of item ids
+
+    // Jegyzetfüzet (Notebook)
+    notes: Note[];
+    addNote: (text: string, moduleId?: number) => void;
+    updateNote: (id: string, text: string) => void;
+    deleteNote: (id: string) => void;
 
     // Gamification
     xp: number;
@@ -21,6 +34,10 @@ interface ProgressState {
     addXp: (amount: number) => void;
     unlockBadge: (badgeId: string) => void;
     checkStreak: () => void;
+
+    // Data Management
+    exportData: () => string;
+    importData: (base64String: string) => boolean;
 
     // Onboarding
     onboardingCompleted: boolean;
@@ -142,6 +159,95 @@ export const useProgressStore = create<ProgressState>()(
                     }
                     return state;
                 });
+            },
+
+            // --- Jegyzetfüzet (Notebook) logika ---
+            notes: [],
+
+            addNote: (text: string, moduleId?: number) => {
+                set((state) => ({
+                    notes: [
+                        {
+                            id: crypto.randomUUID(),
+                            text,
+                            date: new Date().toISOString(),
+                            moduleId
+                        },
+                        ...state.notes
+                    ]
+                }));
+                // Kis XP jutalom az első jegyzetért
+                if (get().notes.length === 1) get().addXp(10);
+            },
+
+            updateNote: (id: string, text: string) => {
+                set((state) => ({
+                    notes: state.notes.map(note =>
+                        note.id === id ? { ...note, text, date: new Date().toISOString() } : note
+                    )
+                }));
+            },
+
+            deleteNote: (id: string) => {
+                set((state) => ({
+                    notes: state.notes.filter(note => note.id !== id)
+                }));
+            },
+
+            // --- Export / Import ---
+            exportData: () => {
+                const state = get();
+                const dataToExport = {
+                    completedModules: state.completedModules,
+                    completedCurriculumItems: state.completedCurriculumItems,
+                    xp: state.xp,
+                    unlockedBadges: state.unlockedBadges,
+                    lastLoginDate: state.lastLoginDate,
+                    streakDays: state.streakDays,
+                    onboardingCompleted: state.onboardingCompleted,
+                    userLevel: state.userLevel,
+                    userGoal: state.userGoal,
+                    notes: state.notes
+                };
+
+                try {
+                    // JSON to Base64 (btoa) for easy sharing
+                    const jsonString = JSON.stringify(dataToExport);
+                    return btoa(encodeURIComponent(jsonString));
+                } catch (e) {
+                    console.error("Export hiba:", e);
+                    return "";
+                }
+            },
+
+            importData: (base64String: string) => {
+                if (!base64String || base64String.trim() === '') return false;
+                try {
+                    // Decode from Base64
+                    const jsonString = decodeURIComponent(atob(base64String));
+                    const parsedData = JSON.parse(jsonString);
+
+                    // Alapvető validáció (egy-két kulcs kötelező jelenléte)
+                    if (parsedData && typeof parsedData.xp === 'number') {
+                        set({
+                            completedModules: parsedData.completedModules || [],
+                            completedCurriculumItems: parsedData.completedCurriculumItems || {},
+                            xp: parsedData.xp,
+                            unlockedBadges: parsedData.unlockedBadges || [],
+                            lastLoginDate: parsedData.lastLoginDate || null,
+                            streakDays: parsedData.streakDays || 0,
+                            onboardingCompleted: parsedData.onboardingCompleted || false,
+                            userLevel: parsedData.userLevel || null,
+                            userGoal: parsedData.userGoal || null,
+                            notes: parsedData.notes || []
+                        });
+                        return true;
+                    }
+                    return false;
+                } catch (e) {
+                    console.error("Import hiba:", e);
+                    return false;
+                }
             },
 
             // Onboarding defaults

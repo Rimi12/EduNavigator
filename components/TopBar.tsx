@@ -3,7 +3,7 @@
 import { useProgressStore } from "@/lib/progressStore";
 import { ThemeToggle } from "./ThemeToggle";
 import { ProgressBar } from "./ProgressBar";
-import { GraduationCap } from "lucide-react";
+import { GraduationCap, Search, BookOpen } from "lucide-react";
 import Link from "next/link";
 import { useEffect, useState } from "react";
 
@@ -51,13 +51,35 @@ export function TopBar() {
                 </div>
 
                 {/* End Actions (XP & Theme) */}
-                <div className="flex items-center gap-3 ml-auto">
+                <div className="flex items-center gap-2 sm:gap-3 ml-auto">
                     {mounted && (
                         <Link href="/profil" className="flex items-center gap-1.5 bg-amber-500/10 text-amber-500 hover:bg-amber-500/20 px-3 py-1.5 rounded-full font-bold border border-amber-500/20 shadow-inner transition-colors">
                             <span className="text-sm">{xp}</span>
                             <span className="text-[10px] uppercase tracking-wider opacity-80 mt-0.5">XP</span>
                         </Link>
                     )}
+
+                    {/* Search Trigger Panel */}
+                    <button
+                        onClick={() => document.dispatchEvent(new CustomEvent('open-search'))}
+                        className="flex items-center justify-center w-9 h-9 sm:w-auto sm:px-3 sm:py-1.5 bg-muted/50 text-muted-foreground hover:bg-muted rounded-full text-sm font-medium border border-border/50 transition-colors"
+                        aria-label="Keresés (Ctrl+K)"
+                    >
+                        <Search className="w-4 h-4 sm:mr-1.5" />
+                        <span className="hidden sm:inline-block opacity-80">Keresés</span>
+                        <kbd className="hidden lg:inline-flex opacity-50 text-[10px] ml-2 bg-background px-1.5 py-0.5 rounded border border-border">⌘K</kbd>
+                    </button>
+
+                    {/* Notebook Trigger Panel */}
+                    <button
+                        onClick={() => document.dispatchEvent(new CustomEvent('open-notebook'))}
+                        className="flex items-center justify-center w-9 h-9 sm:w-auto sm:px-3 sm:py-1.5 bg-primary/10 text-primary hover:bg-primary/20 rounded-full text-sm font-medium border border-primary/20 transition-colors"
+                        aria-label="Jegyzetfüzet"
+                    >
+                        <BookOpen className="w-4 h-4 sm:mr-1.5" />
+                        <span className="hidden sm:inline-block font-bold">Jegyzetek</span>
+                    </button>
+
                     <ThemeToggle />
                 </div>
 
