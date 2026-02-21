@@ -1,4 +1,4 @@
-import { openai } from '@ai-sdk/openai';
+import { google } from '@ai-sdk/google';
 import { generateText, generateObject } from 'ai';
 import { z } from 'zod';
 import { NextResponse } from 'next/server';
@@ -13,7 +13,7 @@ export async function POST(req: Request) {
 
         // 1. Run the user's prompt to generate the text
         const { text: generatedText } = await generateText({
-            model: openai('gpt-4o-mini'),
+            model: google('gemini-1.5-flash'),
             prompt: prompt,
             temperature: temperature,
         });
@@ -39,7 +39,9 @@ Provide a short, constructive educational feedback in Hungarian language.
 `;
 
         const { object: evaluation } = await generateObject({
-            model: openai('gpt-4o-mini'),
+            model: google('gemini-1.5-flash', {
+                structuredOutputs: true,
+            }),
             schema: z.object({
                 passed: z.boolean().describe('True if the generated text achieves the goal and meets all constraints.'),
                 score: z.number().min(0).max(100).describe('Score from 0 to 100 based on how well it did.'),
