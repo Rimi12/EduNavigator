@@ -67,6 +67,38 @@ export function Sidebar() {
                         );
                     })}
                 </nav>
+
+                {/* Extra Links (Static) */}
+                <h4 className="text-sm font-semibold tracking-wider text-muted-foreground uppercase mt-8 mb-4">
+                    Extrák
+                </h4>
+                <nav className="flex flex-col gap-1.5">
+                    <Link
+                        href="/szotar"
+                        className={cn(
+                            "flex items-center gap-3 px-3 py-2.5 rounded-lg transition-all duration-200 group",
+                            pathname === "/szotar"
+                                ? "bg-primary/10 text-primary font-medium"
+                                : "text-muted-foreground hover:bg-secondary hover:text-foreground"
+                        )}
+                    >
+                        <Icons.Library className={cn("w-5 h-5 flex-shrink-0 transition-colors", pathname === "/szotar" ? "text-primary" : "text-muted-foreground group-hover:text-foreground")} />
+                        <span className="truncate text-sm">AI Fogalomtár</span>
+                    </Link>
+                    <Link
+                        href="/puskak"
+                        className={cn(
+                            "flex items-center gap-3 px-3 py-2.5 rounded-lg transition-all duration-200 group",
+                            pathname === "/puskak"
+                                ? "bg-primary/10 text-primary font-medium"
+                                : "text-muted-foreground hover:bg-secondary hover:text-foreground"
+                        )}
+                    >
+                        <Icons.FileText className={cn("w-5 h-5 flex-shrink-0 transition-colors", pathname === "/puskak" ? "text-primary" : "text-muted-foreground group-hover:text-foreground")} />
+                        <span className="truncate text-sm">Puskák (Cheat Sheets)</span>
+                    </Link>
+                </nav>
+
             </div>
         </aside >
     );

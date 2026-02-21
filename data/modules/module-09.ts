@@ -5,6 +5,7 @@ export const module09: Module = {
     title: "Optimalizálás és Finomhangolás",
     icon: "Gauge", // Lucide icon
     description: "A modellek sebességének növelése, memóriaigényük csökkentése (Fine-Tuning) és az egyedi adatok betanítása.",
+    tags: ['advanced', 'data', 'coding'],
     dayInSchedule: "Nap 7",
 
     painPoints: [

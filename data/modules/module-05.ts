@@ -5,6 +5,7 @@ export const module05: Module = {
     title: "Statisztika és Adatelemzés AI-hoz",
     icon: "BarChart3", // Lucide icon
     description: "AI modellek eredményeinek mérése, értelmezése és az adatok elosztásának megértése.",
+    tags: ['advanced', 'data'],
     dayInSchedule: "Nap 5",
 
     painPoints: [

@@ -5,6 +5,7 @@ export const module04: Module = {
     title: "Prompt Engineering",
     icon: "MessageSquare",
     description: "Hatékony promptok írása AI modellekhez",
+    tags: ['beginner', 'content', 'coding', 'general'],
     dayInSchedule: "Nap 4",
 
     painPoints: [

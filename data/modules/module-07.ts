@@ -5,6 +5,7 @@ export const module07: Module = {
     title: "AI Deploy & Karbantartás",
     icon: "Rocket", // Lucide icon
     description: "AI rendszerek production (éles) környezetbe vitele és fenntartása.",
+    tags: ['advanced', 'coding'],
     dayInSchedule: "Nap 6",
 
     painPoints: [

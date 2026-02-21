@@ -5,6 +5,7 @@ export const module08: Module = {
     title: "AI Monitoring és Értékelés",
     icon: "Search", // Lucide icon
     description: "AI rendszerek teljesítményének, változásainak folyamatos felügyelete és mérése.",
+    tags: ['advanced', 'data', 'coding'],
     dayInSchedule: "Nap 7",
 
     painPoints: [

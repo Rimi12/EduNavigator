@@ -5,6 +5,7 @@ export const module06: Module = {
     title: "Agentic System Building",
     icon: "Blocks", // Lucide icon
     description: "Összetett (Több-ügynökös) AI rendszerek felépítésének mikéntje és architektúrája.",
+    tags: ['advanced', 'coding'],
     dayInSchedule: "Nap 6",
 
     painPoints: [

@@ -1,7 +1,25 @@
+"use client";
+
+import { useState, useEffect } from "react";
 import { modules } from "@/data/courseData";
 import { ModuleCard } from "@/components/ModuleCard";
+import { useProgressStore } from "@/lib/progressStore";
+import { Sparkles } from "lucide-react";
 
 export default function Home() {
+  const { onboardingCompleted, userGoal, userLevel } = useProgressStore();
+  const [mounted, setMounted] = useState(false);
+
+  useEffect(() => {
+    setMounted(true);
+  }, []);
+
+  // Filter recommended modules
+  const recommendedModules = modules.filter(m => {
+    if (!userGoal || !m.tags) return false;
+    return m.tags.includes(userGoal) || m.tags.includes(userLevel as string);
+  }).slice(0, 3); // Get top 3
+
   return (
     <div className="flex flex-col min-h-[calc(100vh-4rem)] p-4 sm:p-8 pb-20 gap-10">
 
@@ -28,12 +46,33 @@ export default function Home() {
         </div>
       </section>
 
-      {/* Modules Grid */}
-      <section className="flex flex-col gap-6">
+      {/* Recommended Modules (Only if onboarding is complete & matches exist) */}
+      {mounted && onboardingCompleted && recommendedModules.length > 0 && (
+        <section className="flex flex-col gap-6 bg-primary/5 p-6 rounded-3xl border border-primary/10">
+          <div className="flex items-center gap-3 mb-2">
+            <div className="p-2 bg-primary/20 text-primary rounded-xl">
+              <Sparkles className="w-6 h-6" />
+            </div>
+            <div>
+              <h2 className="text-2xl font-bold tracking-tight">Kifejezetten Neked Ajánlott</h2>
+              <p className="text-muted-foreground text-sm mt-0.5">A beállításaid alapján ezekből a modulokból tanulhatsz a legtöbbet.</p>
+            </div>
+          </div>
+
+          <div className="grid grid-cols-1 md:grid-cols-2 xl:grid-cols-3 gap-6">
+            {recommendedModules.map((module) => (
+              <ModuleCard key={module.id} module={module} />
+            ))}
+          </div>
+        </section>
+      )}
+
+      {/* All Modules Grid */}
+      <section className="flex flex-col gap-6 mt-4">
         <div className="flex items-end justify-between mb-2">
           <div>
-            <h2 className="text-2xl font-bold tracking-tight">Képzési Modulok</h2>
-            <p className="text-muted-foreground mt-1">Válaszd ki a modult a tanulás megkezdéséhez</p>
+            <h2 className="text-2xl font-bold tracking-tight">Összes Képzési Modul</h2>
+            <p className="text-muted-foreground mt-1">Böngéssz a teljes 10 napos tananyagban</p>
           </div>
         </div>
 

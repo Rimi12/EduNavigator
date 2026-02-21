@@ -4,6 +4,7 @@ import "./globals.css";
 import { ThemeProvider } from "@/components/theme-provider";
 import { TopBar } from "@/components/TopBar";
 import { Sidebar } from "@/components/Sidebar";
+import { OnboardingModal } from "@/components/OnboardingModal";
 
 const inter = Inter({ subsets: ["latin"] });
 
@@ -34,6 +35,7 @@ export default function RootLayout({
                 {children}
               </main>
             </div>
+            <OnboardingModal />
           </div>
         </ThemeProvider>
       </body>

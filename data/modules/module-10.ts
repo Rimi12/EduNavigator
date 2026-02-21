@@ -5,6 +5,7 @@ export const module10: Module = {
     title: "Eszközök & Nyílt Forráskód",
     icon: "Wrench", // Lucide icon
     description: "Modern fejlesztői AI eszközök, CLI szoftverek és nyílt forráskódú megoldások a gyorsabb építéshez.",
+    tags: ['beginner', 'advanced', 'general', 'coding'],
     dayInSchedule: "Nap 7",
 
     painPoints: [

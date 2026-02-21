@@ -33,6 +33,7 @@ export interface Module {
   title: string;
   icon: string; // Lucide icon name (e.g., "Sparkles", "Workflow")
   description: string;
+  tags?: string[];
   painPoints: string[];
   curriculum: CurriculumItem[];
   whenToChoose: string[];

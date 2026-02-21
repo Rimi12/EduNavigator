@@ -21,6 +21,12 @@ interface ProgressState {
     addXp: (amount: number) => void;
     unlockBadge: (badgeId: string) => void;
     checkStreak: () => void;
+
+    // Onboarding
+    onboardingCompleted: boolean;
+    userLevel: 'beginner' | 'advanced' | null;
+    userGoal: 'content' | 'coding' | 'data' | 'general' | null;
+    completeOnboarding: (level: 'beginner' | 'advanced', goal: 'content' | 'coding' | 'data' | 'general') => void;
 }
 
 export const useProgressStore = create<ProgressState>()(
@@ -135,6 +141,19 @@ export const useProgressStore = create<ProgressState>()(
                         return { lastLoginDate: today, streakDays: 1 };
                     }
                     return state;
+                });
+            },
+
+            // Onboarding defaults
+            onboardingCompleted: false,
+            userLevel: null,
+            userGoal: null,
+
+            completeOnboarding: (level, goal) => {
+                set({
+                    onboardingCompleted: true,
+                    userLevel: level,
+                    userGoal: goal
                 });
             }
         }),

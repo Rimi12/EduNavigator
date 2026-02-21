@@ -5,6 +5,7 @@ export const module03: Module = {
     title: "RAG és Agentic Workflows II.",
     icon: "Database", // Lucide icon
     description: "A Retrieval-Augmented Generation (RAG) folyamatok részletei, saját adatok integrálása AI rendszerekbe.",
+    tags: ['advanced', 'coding', 'data'],
     dayInSchedule: "Nap 3",
 
     painPoints: [

@@ -5,6 +5,7 @@ export const module02: Module = {
     title: "Agentic AI Workflows I.",
     icon: "Workflow", // Lucide icon
     description: "Ismerkedj meg az autonóm ügynökökkel és azokkal a munkafolyamatokkal, amik önállóan tudnak döntéseket hozni.",
+    tags: ['advanced', 'coding'],
     dayInSchedule: "Nap 2",
 
     painPoints: [

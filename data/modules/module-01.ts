@@ -5,6 +5,7 @@ export const module01: Module = {
     title: "Generatív AI Alapok",
     icon: "Sparkles", // Lucide icon
     description: "Ismerd meg a generatív mesterséges intelligencia működését és alapjait.",
+    tags: ['beginner', 'content', 'general'],
     dayInSchedule: "Nap 1",
 
     painPoints: [
