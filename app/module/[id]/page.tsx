@@ -14,6 +14,7 @@ import { cn } from "@/lib/utils";
 import { useProgressStore } from "@/lib/progressStore";
 import { useShallow } from 'zustand/react/shallow';
 import { PromptTester } from "@/components/PromptTester";
+import { ChallengeWidget } from "@/components/ChallengeWidget";
 
 export default function ModulePage({ params }: { params: Promise<{ id: string }> }) {
     const resolvedParams = use(params);
@@ -200,6 +201,13 @@ export default function ModulePage({ params }: { params: Promise<{ id: string }>
                         Tudáspróba
                     </h2>
                     <QuizWidget quiz={module.interactiveElement} />
+                </section>
+            )}
+
+            {/* AI Grader Challenge */}
+            {module.challenge && (
+                <section className="mb-16">
+                    <ChallengeWidget challenge={module.challenge} moduleId={module.id} />
                 </section>
             )}
 

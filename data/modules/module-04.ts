@@ -105,5 +105,12 @@ A tökéletes AI parancsok összetevői:
         ],
         correct: 1,
         explanation: "A dátum és időpont általában nem szükséges ahhoz, hogy jó promptot írj. A Szerep, Kontextus, és Formátum viszont kulcsfontosságú."
+    },
+
+    challenge: {
+        title: "Kihívás: Precíziós Formázás",
+        goal: "Olyan promptot kérünk, amiben utasítod az AI-t, hogy írjon neked egy véletlenszerű heti étrendet egy vegán embernek. A kimenet KIZÁRÓLAG egy Markdown táblázat legyen, és a táblázatnak pontosan 3 oszlopa legyen.",
+        constraints: "- Tartalmaznia kell a 'vegán' és az 'étrend' kulcsszavakat a promptodban. \n- Meg kell követelned a végső formátumot (Markdown Table). \n- Meg kell adnod a korlátot (A táblázaton kívül semmi más magyarázat nem lehet).",
+        successKudos: "Kitűnő! Úgy irányítod az AI-t, mint egy profit."
     }
 };

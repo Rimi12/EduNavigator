@@ -28,6 +28,13 @@ export interface Resource {
   url: string; // Link
 }
 
+export interface Challenge {
+  title: string;
+  goal: string;
+  constraints: string;
+  successKudos: string;
+}
+
 export interface Module {
   id: number;
   title: string;
@@ -47,4 +54,5 @@ export interface Module {
   deepDive?: string; // Markdown formatted Deep Dive
   sandboxLinks?: SandboxLink[]; // Sandbox tools
   interactiveElement?: QuizQuestion; // Quiz
+  challenge?: Challenge; // Interactive AI Grader challenge
 }

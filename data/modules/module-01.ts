@@ -85,5 +85,12 @@ Képzeld el, hogy olvasol egy mondatot. Amikor a "bank" szót olvasod, a jelent�
         ],
         correct: 1,
         explanation: "A Temperature (hőmérséklet) szabályozza, mennyire legyen prediktábilis vagy épp meglepő (kreatív) az AI válasza. Az alacsony érték tényszerű és monoton, a magas érték változatos válaszokat ad."
+    },
+
+    challenge: {
+        title: "Kihívás: Magyarázd el egyszerűen!",
+        goal: "Írj egy olyan promptot az AI-nak, amiben megkérdezed tőle a víz körforgását egy teljesen laikus, óvodás korú gyerek számára, pontosan 3 egyszerű pontban.",
+        constraints: "- Célközönség beállítása (Role/Audience) \n- Formátum (pontosan 3 pont) \n- A végeredménynek könnyen érthetőnek és mese-szerűnek kell lennie.",
+        successKudos: "Zseniális! Elsajátítottad az AI kontextusba helyezését."
     }
 };
