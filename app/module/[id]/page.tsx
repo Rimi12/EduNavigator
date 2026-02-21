@@ -1,6 +1,6 @@
 "use client";
 
-import { use } from "react";
+import { use, useState } from "react";
 import { modules } from "@/data/courseData";
 import { notFound } from "next/navigation";
 import { CoffeeBreakCard } from "@/components/CoffeeBreakCard";
@@ -8,6 +8,7 @@ import { DeepDiveSection } from "@/components/DeepDiveSection";
 import { SandboxActionBar } from "@/components/SandboxActionBar";
 import { QuizWidget } from "@/components/QuizWidget";
 import { CurriculumConfirmationModal } from "@/components/CurriculumConfirmationModal";
+import { CurriculumContentPanel } from "@/components/CurriculumContentPanel";
 import { CompletionConfetti } from "@/components/CompletionConfetti";
 import * as Icons from "lucide-react";
 import { cn } from "@/lib/utils";
@@ -15,11 +16,14 @@ import { useProgressStore } from "@/lib/progressStore";
 import { useShallow } from 'zustand/react/shallow';
 import { PromptTester } from "@/components/PromptTester";
 import { ChallengeWidget } from "@/components/ChallengeWidget";
+import { CurriculumItem } from "@/types";
 
 export default function ModulePage({ params }: { params: Promise<{ id: string }> }) {
     const resolvedParams = use(params);
     const moduleId = parseInt(resolvedParams.id);
     const module = modules.find(m => m.id === moduleId);
+
+    const [selectedCurriculumItem, setSelectedCurriculumItem] = useState<CurriculumItem | null>(null);
 
     const { completedCurriculumItemsMap, toggleCurriculumItem, toggleModuleComplete, completedModules } = useProgressStore(
         useShallow((state) => ({
@@ -123,26 +127,44 @@ export default function ModulePage({ params }: { params: Promise<{ id: string }>
                         <div className="space-y-1">
                             {module.curriculum.map((item) => {
                                 const isItemCompleted = completedCurriculumItems.includes(item.id);
+                                const isInteractive = !!item.content || !!item.videoUrl;
+
                                 return (
                                     <button
                                         key={item.id}
-                                        onClick={() => toggleCurriculumItem(module.id, item.id)}
-                                        className="w-full text-left flex items-start gap-3 p-2 hover:bg-secondary rounded-lg transition-colors group"
+                                        onClick={() => {
+                                            if (isInteractive) {
+                                                setSelectedCurriculumItem(item);
+                                            } else {
+                                                toggleCurriculumItem(module.id, item.id);
+                                            }
+                                        }}
+                                        className="w-full text-left flex items-start justify-between gap-3 p-2 hover:bg-secondary rounded-lg transition-colors group"
                                     >
-                                        <div className={cn(
-                                            "mt-0.5 w-5 h-5 flex-shrink-0 rounded-full border-2 flex items-center justify-center transition-colors",
-                                            isItemCompleted
-                                                ? "bg-emerald-500 border-emerald-500 text-white"
-                                                : "border-muted-foreground/30 group-hover:border-primary/50"
-                                        )}>
-                                            {isItemCompleted && <Icons.Check className="w-3.5 h-3.5" />}
+                                        <div className="flex items-start gap-3">
+                                            <div className={cn(
+                                                "mt-0.5 w-5 h-5 flex-shrink-0 rounded-full border-2 flex items-center justify-center transition-colors",
+                                                isItemCompleted
+                                                    ? "bg-emerald-500 border-emerald-500 text-white"
+                                                    : "border-muted-foreground/30 group-hover:border-primary/50"
+                                            )}>
+                                                {isItemCompleted && <Icons.Check className="w-3.5 h-3.5" />}
+                                            </div>
+                                            <span className={cn(
+                                                "text-sm leading-tight transition-all",
+                                                isItemCompleted ? "text-muted-foreground line-through opacity-70" : "text-foreground group-hover:text-primary"
+                                            )}>
+                                                {item.text}
+                                            </span>
                                         </div>
-                                        <span className={cn(
-                                            "text-sm leading-tight transition-all",
-                                            isItemCompleted ? "text-muted-foreground line-through opacity-70" : "text-foreground group-hover:text-primary"
-                                        )}>
-                                            {item.text}
-                                        </span>
+
+                                        {/* Interaktív Tartalom Vizuális Jelző */}
+                                        {isInteractive && !isItemCompleted && (
+                                            <div className="shrink-0 text-primary/70 group-hover:text-primary transition-colors flex items-center pr-1">
+                                                {item.videoUrl ? <Icons.PlayCircle className="w-4 h-4" /> : <Icons.BookOpen className="w-4 h-4" />}
+                                                <span className="text-[10px] uppercase font-bold ml-1 hidden lg:inline-block">Olvasás</span>
+                                            </div>
+                                        )}
                                     </button>
                                 )
                             })}
@@ -244,6 +266,15 @@ export default function ModulePage({ params }: { params: Promise<{ id: string }>
             </div>
 
             <CompletionConfetti isComplete={isModuleCompleted} />
+
+            <CurriculumContentPanel
+                item={selectedCurriculumItem}
+                moduleId={module.id}
+                isOpen={!!selectedCurriculumItem}
+                onClose={() => setSelectedCurriculumItem(null)}
+                onComplete={(mId, iId) => toggleCurriculumItem(mId, iId)}
+                isAlreadyCompleted={selectedCurriculumItem ? completedCurriculumItems.includes(selectedCurriculumItem.id) : false}
+            />
 
         </div>
     );

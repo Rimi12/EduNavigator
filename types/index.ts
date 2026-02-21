@@ -2,6 +2,8 @@ export interface CurriculumItem {
   id: string; // e.g. "4-1"
   text: string; // Learning goal text
   subcategory?: string; // Optional subcategory
+  content?: string; // Markdown formatted lesson content in Hungarian
+  videoUrl?: string; // YouTube or Vimeo embed URL
 }
 
 export interface SandboxLink {
